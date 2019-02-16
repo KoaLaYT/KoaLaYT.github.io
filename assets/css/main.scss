@@ -4,6 +4,7 @@
 @import 'base.scss';
 
 .nav {
+  margin-top: 3rem;
   ul {
     display: flex;
     flex-flow: column nowrap;
@@ -51,6 +52,12 @@
         }
       }
     }
+  }
+}
+
+.main {
+  img {
+    max-width: 100%;
   }
 }
 
