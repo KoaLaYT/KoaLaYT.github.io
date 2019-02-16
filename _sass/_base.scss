@@ -1,0 +1,76 @@
+/* define theme color */
+$base-color: #d5ebdc;
+$highlight-color: #FF1654;
+$font-color: #0e1316;
+$header-color: black;
+$code-base-color: #F3FFBD;
+$dark-blue: #247BA0;
+$dark-green: #70C1B3;
+
+html {
+  font-size: 18px;
+  font-family: Arial, Helvetica, "Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;
+  color: $font-color;
+  h1, h2, h3, h4, h5, h6, strong {
+    color: $header-color;
+  }
+}
+
+body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+
+.header, .main {
+  padding: 1rem;
+}
+
+.header {
+  box-sizing: border-box;
+  background-color: $base-color;
+  position: fixed;
+  width: 300px;
+  height: 100vh;
+}
+
+.main {
+  grid-column: 2 / 3;
+}
+
+.profile {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  img {
+    display: block;
+    width: 100px;
+    border-radius: 50%;
+  }
+  .description {
+    text-align: center;
+    h2 {
+      margin-bottom: 0;
+    }
+    p {
+      font-size: 0.8rem;
+      margin: 0.5rem 0;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  .header {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+  .profile {
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
+}

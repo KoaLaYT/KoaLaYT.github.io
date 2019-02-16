@@ -1,0 +1,882 @@
+# Chapter 4 / Section 1 : Undirected Graphs
+## Main Content
+TBA
+
+## Exercise
+### 4.1.4 
+> Add a method hasEdge() to Graph which takes two int arguments v and w and returns true if the graph has an edge v-w , false otherwise.
+
+The code is :
+```java
+public boolean hasEdge(int v, int w)
+{
+	for (Integer i : adj[v])
+	{
+		if (i == w)
+			return true;
+	}
+	return false;
+}
+```
+
+### 4.1.5
+> Modify Graph to disallow parallel edges and self-loops.
+
+Just add two checks into the function `addEdge` will do:
+```java
+public void addEdge(int a, int b)
+{
+	// forbid self-loops
+	if (a == b)
+		return;
+
+	// forbid parallel edges
+	for (Integer i : adj[a])
+	{
+		if (i == b)
+			return;
+	}
+
+	adj[a].add(b);
+	adj[b].add(a);
+	E++;
+}
+```
+
+### 4.1.13
+> Add a distTo() method to the BreadthFirstPath API and implementation, which returns the number of edges on the shortest path from the source to a given vertex. A distTo() query should run in constant time.
+
+I add an array `distTo[]` to record the depth of every vertex, here are my modified `bfp()` and new added `distTo()` methods: 
+```java
+private void bfp(Graph g, int s)
+{
+	Queue<Integer> q = new Queue<>();
+	Queue<Integer> d = new Queue<>();
+	marked[s] = true;
+	distTo[s] = 0;
+	q.enqueue(s);
+	d.enqueue(1);
+
+	while (!q.isEmpty())
+	{
+		int t = q.dequeue();
+		int dp = d.dequeue();
+		for (Integer i : g.adj(t))
+		{
+			if (!marked[i])
+			{
+				edgeTo[i] = t;
+				marked[i] = true;
+				distTo[i] = dp;
+				d.enqueue(dp+1);
+				q.enqueue(i);
+			}
+		}
+	}
+}
+
+public int distTo(int v)
+{
+	return distTo[v];
+}
+```
+
+### 4.1.15
+> Modify the input stream constructor for Graph to also allow adjacency lists from standard input (in a manner similar to SymbolGraph ), as in the example tinyGadj.txt shown at right. After the number of vertices and edges, each line contains a vertex and its list of adjacent vertices.
+
+Just similar as `Graph(In in)`, we can get following construtor:
+```java
+public MyGraph()
+{
+	this(Integer.parseInt(StdIn.readLine()));
+	StdIn.readLine();
+	while (StdIn.hasNextLine())
+	{
+		String[] s = StdIn.readLine().split(" ");
+		int a = Integer.parseInt(s[0]);
+		for (int i = 1; i < s.length; i++)
+		{
+			int b = Integer.parseInt(s[i]);
+			addEdge(a, b);
+		}
+	}
+}
+```
+And the result is just the same with the book:
+```
+$ java MyGraph
+# std input
+13
+13
+0 1 2 5 6
+3 4 5
+4 5 6
+7 8
+9 10 11 12
+11 12
+13 vertices, 13 edges
+0: 6 5 2 1
+1: 0
+2: 0
+3: 5 4
+4: 6 5 3
+5: 4 3 0
+6: 4 0
+7: 8
+8: 7
+9: 12 11 10
+10: 9
+11: 12 9
+12: 11 9
+```
+
+### 4.1.16
+> The eccentricity of a vertex v is the the length of the shortest path from that vertex to the furthest vertex from v . The diameter of a graph is the maximum eccentricity of any vertex. The radius of a graph is the smallest eccentricity of any vertex. A center is a vertex whose eccentricity is the radius. Implement the following API:
+
+return type | method | discriptions
+----------- | ------ | ------------
+/ | GraphProperties(Graph G) | constructor (exception if G not connected)
+int | eccentricity(int v) | eccentricity of v
+int | diameter() | diameter of G
+int | radius() | radius of G
+int | center() | a center of G
+
+This is my implementation of `Class GraphProperties`:
+```java
+import edu.princeton.cs.algs4.Graph;
+import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
+
+public class GraphProperties
+{
+	private Graph g;
+
+	public GraphProperties(Graph g)
+	{
+		this.g = g;
+		BreadthFirstPaths bfp = new BreadthFirstPaths(g, 0);
+		int count = 0;
+		for (int v = 0; v < g.V(); v++)
+			if (bfp.hasPathTo(v))
+				count++;
+		if (count != g.V())
+			throw new IllegalArgumentException("Graph g is not connected");
+	}
+
+	public int eccentricity(int v)
+	{
+		BreadthFirstPaths bfp = new BreadthFirstPaths(g, v);
+
+		int max = 0;
+		for (int w = 0; w < g.V(); w++)
+		{
+			int count = 0;
+			for (Integer i : bfp.pathTo(w))
+				count++;
+			if (--count > max)
+				max = count;
+		}
+		return max;
+	}
+
+	public int diameter()
+	{
+		int max = 0;
+		for (int v = 0; v < g.V(); v++)
+		{
+			int t = eccentricity(v);
+			if (t > max)
+				max = t;
+		}
+		return max;
+	}
+
+	public int radius()
+	{
+		int min = Integer.MAX_VALUE;
+		for (int v = 0; v < g.V(); v++)
+		{
+			int t = eccentricity(v);
+			if (t < min)
+				min = t;
+		}
+		return min;
+	}
+
+	public int center()
+	{
+		int r = radius();
+		for (int v = 0; v < g.V(); v++)
+		{
+			int t = eccentricity(v);
+			if (t == r)
+				return v;
+		}
+		return -1;
+	}
+
+	public String toString()
+	{
+		return g.toString();
+	}
+
+	public static void main(String[] args)
+	{
+		Graph g = new Graph(new In(args[0]));
+		GraphProperties gp = new GraphProperties(g);
+
+		int t = gp.center();
+		BreadthFirstPaths bfp = new BreadthFirstPaths(g, t);
+		for (int v = 0; v < g.V(); v++)
+		{
+			StdOut.print(t + ": ");
+			for (Integer i : bfp.pathTo(v))
+			{
+				if (i == t)
+					StdOut.print(t);
+				else
+					StdOut.print("-" + i);
+			}
+			StdOut.println();
+		}
+		StdOut.println("The eccentricity of " + t + " is: " + gp.eccentricity(t));
+		StdOut.println("The diameter is: " + gp.diameter());
+		StdOut.println("The radius is: " + gp.radius());
+		StdOut.println("The center is: " + gp.center());
+	}
+}
+```
+And the test result is : 
+```
+$ java GraphProperties mediumG.txt 
+7: 7-197-118-165-68-0
+7: 7-188-62-128-69-107-1
+7: 7-42-2
+7: 7-188-62-239-55-67-3
+7: 7-188-138-4
+7: 7-188-138-4-5
+7: 7-42-2-14-166-6
+7: 7
+7: 7-101-219-30-8
+7: 7-197-118-142-9
+7: 7-101-219-30-8-246-10
+7: 7-101-219-30-11
+7: 7-42-141-35-12
+7: 7-101-214-51-133-13
+7: 7-42-2-14
+7: 7-65-208-168-204-15
+7: 7-42-2-14-166-16
+7: 7-42-141-35-41-17
+7: 7-42-2-18
+7: 7-101-214-70-19
+7: 7-188-62-128-136-87-194-20
+7: 7-230-21
+7: 7-42-141-35-41-81-53-22
+7: 7-197-118-165-68-23
+7: 7-197-118-165-68-0-24
+7: 7-188-62-128-136-87-111-25
+7: 7-188-138-26
+7: 7-230-27
+7: 7-42-141-35-28
+7: 7-42-141-35-41-81-227-29
+7: 7-101-219-30
+7: 7-188-62-239-55-67-3-241-31
+7: 7-65-208-32
+7: 7-197-118-142-9-33
+7: 7-42-141-35-41-81-53-34
+7: 7-42-141-35
+7: 7-42-141-35-36
+7: 7-188-62-239-55-67-3-37
+7: 7-42-141-35-41-81-146-109-38
+7: 7-65-208-168-44-80-39
+7: 7-188-62-128-136-87-194-40
+7: 7-42-141-35-41
+7: 7-42
+7: 7-101-219-43
+7: 7-65-208-168-44
+7: 7-188-138-26-217-45
+7: 7-188-62-128-69-107-72-186-46
+7: 7-42-141-35-41-81-146-47
+7: 7-188-138-26-217-48
+7: 7-197-118-165-191-49
+7: 7-65-208-32-248-50
+7: 7-101-214-51
+7: 7-65-208-52
+7: 7-42-141-35-41-81-53
+7: 7-42-2-14-166-6-54
+7: 7-188-62-239-55
+7: 7-42-141-35-41-81-53-56
+7: 7-57
+7: 7-197-118-165-68-58
+7: 7-65-208-32-248-59
+7: 7-188-62-128-136-87-111-60
+7: 7-188-62-239-112-234-61
+7: 7-188-62
+7: 7-188-62-128-136-87-111-25-63
+7: 7-42-141-35-41-17-134-64
+7: 7-65
+7: 7-65-208-168-204-15-66
+7: 7-188-62-239-55-67
+7: 7-197-118-165-68
+7: 7-188-62-128-69
+7: 7-101-214-70
+7: 7-71
+7: 7-188-62-128-69-107-72
+7: 7-42-141-35-41-81-53-73
+7: 7-42-141-35-41-81-146-109-74
+7: 7-188-62-128-136-87-194-75
+7: 7-188-138-26-217-45-76
+7: 7-188-138-77
+7: 7-188-62-78
+7: 7-101-214-79
+7: 7-65-208-168-44-80
+7: 7-42-141-35-41-81
+7: 7-101-219-30-82
+7: 7-188-138-26-217-83
+7: 7-101-214-70-84
+7: 7-101-219-30-8-85
+7: 7-42-86
+7: 7-188-62-128-136-87
+7: 7-42-141-35-88
+7: 7-188-62-239-112-234-61-89
+7: 7-188-62-90
+7: 7-42-141-35-41-17-134-91
+7: 7-197-172-92
+7: 7-188-138-226-93
+7: 7-42-141-94
+7: 7-188-138-26-217-45-95
+7: 7-188-62-128-136-87-111-25-96
+7: 7-65-208-168-97
+7: 7-42-141-35-88-98
+7: 7-42-2-14-129-99
+7: 7-101-214-70-100
+7: 7-101
+7: 7-188-138-102
+7: 7-101-214-70-19-103
+7: 7-65-208-32-104
+7: 7-101-219-30-143-105
+7: 7-101-219-30-179-106
+7: 7-188-62-128-69-107
+7: 7-181-108
+7: 7-42-141-35-41-81-146-109
+7: 7-101-110
+7: 7-188-62-128-136-87-111
+7: 7-188-62-239-112
+7: 7-188-62-90-113
+7: 7-197-118-165-68-114
+7: 7-188-62-239-55-67-3-115
+7: 7-188-62-128-136-87-194-116
+7: 7-42-2-14-166-6-117
+7: 7-197-118
+7: 7-42-141-35-41-81-119
+7: 7-188-62-90-113-170-229-120
+7: 7-188-62-90-242-121
+7: 7-101-122
+7: 7-101-219-30-8-246-123
+7: 7-197-124
+7: 7-125
+7: 7-42-141-35-41-81-146-109-126
+7: 7-188-62-239-112-234-61-89-127
+7: 7-188-62-128
+7: 7-42-2-14-129
+7: 7-188-62-239-112-234-130
+7: 7-101-219-30-179-131
+7: 7-197-124-235-132
+7: 7-101-214-51-133
+7: 7-42-141-35-41-17-134
+7: 7-230-135
+7: 7-188-62-128-136
+7: 7-42-141-35-41-17-134-137
+7: 7-188-138
+7: 7-101-139
+7: 7-42-2-14-166-6-140
+7: 7-42-141
+7: 7-197-118-142
+7: 7-101-219-30-143
+7: 7-65-208-32-144
+7: 7-42-141-35-41-17-134-145
+7: 7-42-141-35-41-81-146
+7: 7-42-2-14-166-147
+7: 7-148
+7: 7-197-118-165-68-0-149
+7: 7-188-62-128-69-107-1-150
+7: 7-65-151
+7: 7-101-219-30-152
+7: 7-188-62-239-55-67-3-153
+7: 7-197-118-142-154
+7: 7-197-155
+7: 7-101-156
+7: 7-157
+7: 7-188-62-90-113-158
+7: 7-188-62-239-159
+7: 7-65-208-32-160
+7: 7-188-62-90-242-223-249-161
+7: 7-101-214-51-133-13-162
+7: 7-197-118-165-68-0-163
+7: 7-188-62-128-69-107-1-164
+7: 7-197-118-165
+7: 7-42-2-14-166
+7: 7-42-2-14-166-6-117-167
+7: 7-65-208-168
+7: 7-188-62-128-69-107-1-220-169
+7: 7-188-62-90-113-170
+7: 7-197-124-171
+7: 7-197-172
+7: 7-188-62-128-173
+7: 7-101-214-70-174
+7: 7-101-219-30-11-175
+7: 7-197-118-165-68-176
+7: 7-188-62-128-69-107-72-177
+7: 7-42-2-14-129-178
+7: 7-101-219-30-179
+7: 7-197-118-180
+7: 7-181
+7: 7-188-62-90-242-182
+7: 7-42-141-35-41-17-134-64-183
+7: 7-184
+7: 7-65-208-32-185
+7: 7-188-62-128-69-107-72-186
+7: 7-65-208-187
+7: 7-188
+7: 7-188-62-128-69-107-1-189
+7: 7-188-62-128-69-107-1-220-190
+7: 7-197-118-165-191
+7: 7-101-214-70-19-192
+7: 7-101-219-30-179-193
+7: 7-188-62-128-136-87-194
+7: 7-197-118-142-195
+7: 7-181-196
+7: 7-197
+7: 7-42-141-35-198
+7: 7-188-62-128-136-87-111-25-199
+7: 7-188-62-128-69-107-200
+7: 7-65-208-32-201
+7: 7-197-118-165-68-202
+7: 7-188-62-128-69-107-203
+7: 7-65-208-168-204
+7: 7-101-205
+7: 7-197-118-165-68-0-209-206
+7: 7-101-219-207
+7: 7-65-208
+7: 7-197-118-165-68-0-209
+7: 7-101-219-210
+7: 7-197-118-165-68-0-211
+7: 7-101-219-212
+7: 7-197-118-213
+7: 7-101-214
+7: 7-42-141-35-41-17-134-64-215
+7: 7-65-208-32-201-216
+7: 7-188-138-26-217
+7: 7-42-141-35-41-81-227-218
+7: 7-101-219
+7: 7-188-62-128-69-107-1-220
+7: 7-101-219-221
+7: 7-197-118-165-68-222
+7: 7-188-62-90-242-223
+7: 7-42-141-35-41-81-146-224
+7: 7-197-118-165-191-225
+7: 7-188-138-226
+7: 7-42-141-35-41-81-227
+7: 7-188-62-239-55-67-3-228
+7: 7-188-62-90-113-170-229
+7: 7-230
+7: 7-65-208-231
+7: 7-188-138-26-217-232
+7: 7-188-233
+7: 7-188-62-239-112-234
+7: 7-197-124-235
+7: 7-42-2-14-166-236
+7: 7-188-62-128-136-87-111-60-237
+7: 7-197-155-238
+7: 7-188-62-239
+7: 7-188-240
+7: 7-188-62-239-55-67-3-241
+7: 7-188-62-90-242
+7: 7-101-214-70-19-243
+7: 7-101-219-30-244
+7: 7-197-124-171-245
+7: 7-101-219-30-8-246
+7: 7-188-62-128-69-107-1-220-247
+7: 7-65-208-32-248
+7: 7-188-62-90-242-223-249
+The eccentricity of 7 is: 8
+The diameter is: 14
+The radius is: 8
+The center is: 7
+```
+
+### 4.1.17
+> The girth of a graph is the length of its shortest cycle. If a graph is acyclic, then its girth is infinite. Add a method girth() to GraphProperties that returns the girth of the graph. Hint : Run BFS from each vertex. The shortest cycle containing s is a shortest path from s to some vertex v , plus the edge from v back to s .
+
+Just like the `class Cycle` in the book, but use `BreadthFirstPaths` to check the cycle:
+```java
+public int girth()
+{
+	int min = Integer.MAX_VALUE;
+	for (int v = 0; v < g.V(); v++)
+	{
+		int t = girth(g, v);
+		if (t < min)
+			min = t;
+	}
+	return min;
+}
+
+private int girth(Graph g, int s)
+{
+	int v1 = -1;
+	int v2 = -1;
+	int flag = 0;
+	Queue<Integer> q = new Queue<>();
+	Queue<Integer> f = new Queue<>();
+	boolean[] marked = new boolean[g.V()];
+	marked[s] = true;
+	q.enqueue(s);
+	f.enqueue(-1);
+	while (!q.isEmpty())
+	{
+		int v = q.dequeue();
+		int father = f.dequeue();
+		for (Integer i : g.adj(v))
+		{
+			if (!marked[i])
+			{
+				marked[i] = true;
+				q.enqueue(i);
+				f.enqueue(v);
+			}
+			else
+			{
+				if (i != father)
+				{
+					v1 = v;
+					v2 = i;
+					flag = 1;
+					break;
+				}
+			}
+		}
+		if (flag == 1)
+			break;
+	}
+	if (flag == 0)
+		return -1;
+	BreadthFirstPaths b = new BreadthFirstPaths(g, s);
+	int count = 0;
+	for (Integer i : b.pathTo(v1))
+		count++;
+	for (Integer i : b.pathTo(v2))
+		count++;
+	return count-1;
+}
+```
+
+### 4.1.22
+> Write a program BaconHistogram that prints a histogram of Kevin Bacon numbers, indicating how many performers from movies.txt have a Bacon number of 0, 1, 2, 3, ... . Include a category for those who have an infinite number (not connected to Kevin Bacon).
+
+The code is not difficult, just follow the example on the book: 
+```java
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.SymbolGraph;
+import edu.princeton.cs.algs4.Graph;
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.StdOut;
+
+public class BaconHistogram
+{
+	public static void main(String[] args)
+	{
+		SymbolGraph sg = new SymbolGraph(args[0], args[1]);
+		Graph g = sg.graph();
+		int s = sg.indexOf("Bacon, Kevin");
+		BreadthFirstPaths bfp = new BreadthFirstPaths(g, s);
+
+		ST<Integer, Integer> st = new ST<>();
+
+		for (int v = 0; v < g.V(); v++)
+		{
+			int count = 0;
+			if (bfp.hasPathTo(v))
+			{
+				for (Integer i : bfp.pathTo(v))
+					count++;
+				if (count % 2 == 1)
+				{
+					if (!st.contains(count/2))
+						st.put(count/2, 1);
+					else
+						st.put(count/2, st.get(count/2)+1);
+				}
+			}
+			else
+			{
+				if (!st.contains(-1))
+					st.put(-1, 1);
+				else
+					st.put(-1, st.get(-1)+1);
+			}
+		}
+
+		int ymax = 0;
+		for (Integer i : st.keys())
+		{
+			int t = st.get(i);
+			if (t > ymax)
+				ymax = t;
+		}
+
+		StdDraw.setXscale(-1.5, st.size()+0.5);
+		StdDraw.setYscale(-1, 1.2*ymax);
+
+		for (Integer i : st.keys())
+		{
+			if (i == -1)
+				StdOut.print("Not connected with Kevin: ");
+			else
+				StdOut.print("Bacon number of " + i + " : ");
+			StdOut.println(st.get(i));
+			StdDraw.filledRectangle(i+0.5, st.get(i)/2, 0.4, st.get(i)/2);
+		}
+	}
+}
+```
+And we will get the following result:
+```
+$ java BaconHistogram movies.txt "/"
+Not connected with Kevin: 655
+Bacon number of 0 : 1
+Bacon number of 1 : 1324
+Bacon number of 2 : 70717
+Bacon number of 3 : 40862
+Bacon number of 4 : 1591
+Bacon number of 5 : 125
+```
+The histogram is look like this:
+
+![](../img/BaconHistogram.jpg)
+
+### 4.1.34 Symbol graph.
+> Implement a one-pass SymbolGraph (it need not be a Graph client). Your implementation may pay an extra log V factor for graph operations, for symbol-table lookups.
+
+Here is my implementation by using three `ST`: 
+```java
+import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Bag;
+
+public class OnePassSymbolGraph
+{
+	private ST<String, Integer> st; 		// key -> index
+	private ST<Integer, String> ts; 		// index -> key
+	private ST<Integer, Bag<Integer>> graph; 	// graph implemented by st
+	private int V;
+	private int E;
+
+	public OnePassSymbolGraph(String filename, String delim)
+	{
+		st = new ST<String, Integer>();
+		ts = new ST<Integer, String>();
+		graph = new ST<Integer, Bag<Integer>>();
+		In in = new In(filename);
+		this.V = 0;
+		this.E = 0;
+
+		while (in.hasNextLine())
+		{
+			String[] keys = in.readLine().split(delim);
+			if (!st.contains(keys[0]))
+			{
+				st.put(keys[0], st.size());
+				ts.put(ts.size(), keys[0]);
+				V++;
+			}
+			for (int i = 1; i < keys.length; i++)
+			{
+				// add key and index
+				if (!st.contains(keys[i]))
+				{
+					st.put(keys[i], st.size());
+					ts.put(ts.size(), keys[i]);
+					V++;
+				}
+				this.addEdge(st.get(keys[0]), st.get(keys[i]));
+			}
+		}
+	}
+
+	public boolean contains(String key)
+	{
+		return st.contains(key);
+	}
+
+	public int index(String key)
+	{
+		return st.get(key);
+	}
+
+	public String name(int v)
+	{
+		return ts.get(v);
+	}
+
+	public int V()
+	{
+		return V;
+	}
+
+	public int E()
+	{
+		return E;
+	}
+
+	public void addEdge(int v, int w)
+	{
+		if (!graph.contains(v))
+			graph.put(v, new Bag<Integer>());
+		graph.get(v).add(w);
+		if (!graph.contains(w))
+			graph.put(w, new Bag<Integer>());
+		graph.get(w).add(v);
+		E++;
+	}
+
+	public Iterable<Integer> adj(int v)
+	{
+		if (!ts.contains(v))
+			return null;
+		else
+			return graph.get(v);
+	}
+
+	public String toString()
+	{
+		return "omitted";
+	}
+
+	public static void main(String[] args)
+	{
+		String filename = args[0];
+		String delim = args[1];
+		OnePassSymbolGraph sg = new OnePassSymbolGraph(filename, delim);
+
+		while (StdIn.hasNextLine())
+		{
+			String source = StdIn.readLine();
+			for (Integer w : sg.adj(sg.index(source)))
+				StdOut.println("    " + sg.name(w));
+		}
+	}
+}
+```
+And I do not use the `graph` class but implement its own function of `adj()` and `addEdge()`. The test result would just be the same as the book:
+```
+$ java OnePassSymbolGraph routes.txt " "
+JFK
+    ORD
+    ATL
+    MCO
+LAX
+    LAS
+    PHX
+```
+
+### 4.1.41 Random Euclidean graphs.
+> Write a EuclideanGraph client (see Exercise 4.1.37) RandomEuclideanGraph that produces random graphs by generating V random points in the plane, then connecting each point with all points that are within a circle of radius d centered at that point. Note : The graph will almost certainly be connected if d is larger than the threshold value sqrt( lg V/ PI * V ) and almost certainly disconnected if d is smaller than that value.
+
+This is my code, using an inner class `Point` to wrap the coordinates:
+```java
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.Graph;
+import edu.princeton.cs.algs4.In;
+
+public class EuclideanGraph
+{
+	private ST<Integer, Point> st;
+	private Graph g;
+
+	private class Point
+	{
+		double x;
+		double y;
+
+		public Point(double x, double y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+
+		public double getx()
+		{
+			return x;
+		}
+
+		public double gety()
+		{
+			return y;
+		}
+
+		public double distance(Point that)
+		{
+			double a = this.x - that.getx();
+			double b = this.y - that.gety();
+			return Math.sqrt(a*a + b*b);
+		}
+	}
+
+	public EuclideanGraph(int V, double d)
+	{
+		st = new ST<Integer, Point>();
+		g = new Graph(V);
+		for (int v = 0; v < V; v++)
+		{
+			double x = StdRandom.uniform();
+			double y = StdRandom.uniform();
+			st.put(v, new Point(x, y));
+		}
+		for (int v = 0; v < V; v++)
+		{
+			for (int w = v; w < V; w++)
+			{
+				if (st.get(v).distance(st.get(w)) < d)
+					g.addEdge(v, w);
+			}
+		}
+	}
+
+	public void show()
+	{
+		for (int v = 0; v < g.V(); v++)
+		{
+			StdDraw.setPenRadius(0.008);
+			StdDraw.setPenColor(StdDraw.BLACK);
+			StdDraw.point(st.get(v).getx(), st.get(v).gety());
+			StdDraw.setPenRadius();
+			StdDraw.setPenColor(StdDraw.GRAY);
+			for (Integer w : g.adj(v))
+				StdDraw.line(st.get(v).getx(), st.get(v).gety(), st.get(w).getx(), st.get(w).gety());
+		}
+	}
+
+	public static void main(String[] args)
+	{
+		int V = Integer.parseInt(args[0]);
+		double d = Double.parseDouble(args[1]);
+		EuclideanGraph eg = new EuclideanGraph(V, d);
+		eg.show();
+	}
+}
+```
+If we set the `V` to be `500`, so the threshold value of `d` is about `0.0755`, and the following three image's d value is `0.05`, `0.08` and `0.1`. From these three image we can clearly see the relationship between d with connectivity.
+
+![](../img/EuclideanGraph-500-0.05）
+
+![](../img/EuclideanGraph-500-0.08）
+
+![](../img/EuclideanGraph-500-0.1）

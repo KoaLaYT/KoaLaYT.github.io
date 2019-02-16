@@ -1,0 +1,32 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>KoaLaYT's web page</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+  </head>
+  <body>
+    <header class="header">
+      {% include profile.html %}
+      <nav class="nav">
+        <ul>
+          {% for nav in site.data.navigation %}
+          <li><a href="{{ nav.link }}" {% if nav.link == page.url %} class="current" {% endif %}>{{ nav.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </header>
+    <main class="main">
+      <section class="introduce">
+        <p>欢迎来到我的主页</p>
+        <p>Welcome to my web page, feel free to explore!</p>
+      </section>
+      <section>
+        <img src="/assets/images/climbing-koalayt.jpg" alt="a climbing koala">
+      </section>
+    </main>
+  </body>
+</html>
