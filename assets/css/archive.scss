@@ -1,0 +1,107 @@
+---
+---
+@import 'color';
+
+.flex-container {
+  margin: 1rem;
+  padding: 0;
+  list-style: none;
+  .post {
+    border: 2px solid $base-color;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-flow: column nowrap;
+    .post__header {
+      .image img {
+        width: 100%;
+      }
+      @media (max-width: 900px) {
+        & {
+          flex-flow: column;
+          align-items: center;
+          .image {
+            width: 100%;
+            img {
+              object-fit: cover;
+            }
+          }
+        }
+      }
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      .summary {
+        margin: 1rem;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        .tags {
+          font-size: 0.8rem;
+          margin: 0;
+          p {
+            margin: 2px;
+          }
+          .classes::before {
+            color: $highlight-color;
+            content: "📌";
+            padding-right: 0.5rem;
+          }
+          .keywords::before {
+            color: $dark-blue;
+            content: "📝";
+            padding-right: 0.5rem;
+          }
+        }
+      }
+    }
+    .excerpt {
+      > article {
+        text-align: justify;
+        margin: 1rem;
+        font-size: 0.9rem;
+        a {
+          text-decoration: none;
+          color: $dark-green;
+          transition: color 300ms ease-out;
+          &[href^="http"]::after {
+            content: "⤴️";
+          }
+          &:visited {
+            color: $highlight-color;
+          }
+          &:hover {
+            color: $dark-blue;
+          }
+        }
+      }
+      .link {
+        margin: 1rem;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        > a {
+          text-decoration: none;
+          color: inherit;
+          display: inline-block;
+          padding: 0.5rem 1rem;
+          border: 1px solid $dark-blue;
+          border-radius: 5px;
+          transition: background-color 300ms ease-out,
+                      color 300ms ease-out;
+          &:hover {
+            background-color: $dark-blue;
+            color: white;
+          }
+        }
+        > span {
+          font-size: 0.8rem;
+          &::before {
+            content: "📅";
+            padding-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

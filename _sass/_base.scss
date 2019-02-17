@@ -1,7 +1,25 @@
+html {
+  font-size: 18px;
+  font-family: 'raleway', Arial, Helvetica, "Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;
+  color: $font-color;
+  pre, code {
+    font-size: 16px;
+    font-family: 'anonymous', monospace;
+  }
+  h1, h2, h3, h4, h5, h6, strong {
+    color: $header-color;
+  }
+}
+
 body {
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 300px 1fr;
+}
+
+.title {
+  font-size: 0.8rem;
+  text-align: right;
 }
 
 .header, .main {

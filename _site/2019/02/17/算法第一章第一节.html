@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>算法第一章第一节</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>Chapter 1 / Section 1 : Programming Model</h2>
+    <p>17 Feb 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>algorithm</span>
+      
+      <span>java</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>introduction</span>
+      
+      <span>syntax</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>这是我去年九月份学算法时整理的一些笔记和书上的练习题， 现在我慢慢把它放到网站上，也算复习一下吧。
+(其实只是为了让网站内容多一点罢了。。)</p>
+
+<p>In this section, basic <strong>java</strong> knowledge is introduced along with some self-designed libraries that the book will use.
+Here is the list of these libraries, more information about them can be find in the <a href="https://algs4.cs.princeton.edu/11model/">website</a> of this book.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">StdIn</code></li>
+  <li><code class="highlighter-rouge">StdOut</code></li>
+  <li><code class="highlighter-rouge">StdRandom</code></li>
+  <li><code class="highlighter-rouge">StdDraw</code></li>
+</ul>
+
+<h2 id="exercise">Exercise</h2>
+<h3 id="1111">1.1.11</h3>
+<blockquote>
+  <p>Write a code fragment that prints the contents of a two-dimensional boolean array, using * to represent true and a space to represent false . Include row and column numbers.</p>
+</blockquote>
+
+<p>The code is simple, so I will just omit it. Here is the result:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ java Print2DBooleanArray 10 10
+      1   2   3   4   5   6   7   8   9  10
+  1               *                   *     
+  2   *       *   *   *   *           *   *
+  3           *   *   *   *   *   *   *     
+  4       *   *   *               *         
+  5   *   *           *           *   *   *
+  6       *           *               *     
+  7       *   *   *   *   *   *   *   *     
+  8               *           *       *   *
+  9   *   *   *   *       *       *         
+ 10   *   *           *       *   *       *
+</code></pre></div></div>
+
+<h3 id="1115">1.1.15</h3>
+<blockquote>
+  <p>Write a static method histogram() that takes an array a[] of int values and an integer M as arguments and returns an array of length M whose i th entry is the number of times the integer i appeared in the argument array. If the values in a[] are all between 0 and M–1 , the sum of the values in the returned array should be equal to a.length .</p>
+</blockquote>
+
+<p>Here is the code and result:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdRandom</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdOut</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Histogram</span>
+<span class="o">{</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">histogram</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">gram</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">M</span><span class="o">];</span>
+		<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+			<span class="o">{</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">)</span>
+					<span class="n">count</span><span class="o">++;</span>
+			<span class="o">}</span>
+			<span class="n">gram</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">count</span><span class="o">;</span>
+			<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="o">}</span>
+
+		<span class="k">return</span> <span class="n">gram</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Miss M number."</span><span class="o">);</span>
+			<span class="k">return</span><span class="o">;</span>
+		<span class="o">}</span>
+
+		<span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">20</span><span class="o">];</span>
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">b</span><span class="o">;</span>
+
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+			<span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">StdRandom</span><span class="o">.</span><span class="na">uniform</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+
+		<span class="n">b</span> <span class="o">=</span> <span class="n">histogram</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">m</span><span class="o">);</span>
+		<span class="kt">int</span> <span class="n">acc</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The return array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="n">acc</span> <span class="o">+=</span> <span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"["</span> <span class="o">+</span> <span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">"] "</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">", and its sum is "</span> <span class="o">+</span> <span class="n">acc</span><span class="o">);</span>
+
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The origin array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"["</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">"] "</span><span class="o">);</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">", and its length is "</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ java Histogram 10
+The return array is: [1] [0] [0] [2] [2] [3] [2] [5] [3] [2] , and its sum is 20
+The origin array is: [4] [8] [7] [7] [4] [5] [5] [3] [8] [7] [7] [9] [9] [5] [3] [0] [6] [6] [8] [7] , and its length is 20
+</code></pre></div></div>
+
+<h3 id="1128-remove-duplicates">1.1.28 Remove duplicates.</h3>
+<blockquote>
+  <p>Modify the test client in BinarySearch to remove any duplicate keys in the whitelist after the sort.</p>
+</blockquote>
+
+<p>The code and test result are as follow:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdRandom</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdOut</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UniqByBinarySearch</span>
+<span class="o">{</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">rank1</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span> <span class="n">lo</span> <span class="o">=</span> <span class="n">start</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+
+		<span class="k">while</span> <span class="o">(</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="o">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">])</span>
+				<span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">&gt;</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">])</span>
+				<span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="k">else</span>
+				<span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">30</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">Max</span> <span class="o">=</span> <span class="mi">20</span><span class="o">;</span>
+
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">len</span><span class="o">];</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The origin array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">StdRandom</span><span class="o">.</span><span class="na">uniform</span><span class="o">(</span><span class="n">Max</span><span class="o">);</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%02d "</span><span class="o">,</span> <span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+		<span class="o">}</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+
+		<span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The sorted array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%02d "</span><span class="o">,</span> <span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+		<span class="o">}</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The uniqed array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">rank1</span><span class="o">(</span><span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">test</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="o">{</span>
+				<span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%02d "</span><span class="o">,</span> <span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ java UniqByBinarySearch
+The origin array is: 10 05 17 16 10 02 10 02 05 09 13 13 03 07 06 07 09 15 16 00 15 17 14 17 10 19 08 19 00 15
+The sorted array is: 00 00 02 02 03 05 05 06 07 07 08 09 09 10 10 10 10 13 13 14 15 15 15 16 16 17 17 17 19 19
+The uniqed array is: 00 02 03 05 06 07 08 09 10 13 14 15 16 17 19
+</code></pre></div></div>
+
+<h3 id="1129-equal-keys">1.1.29 Equal keys.</h3>
+<blockquote>
+  <p>Add to BinarySearch a static method rank() that takes a key and a sorted array of int values (some of which may be equal) as arguments and returns the number of elements that are smaller than the key and a similar method count() that returns the number of elements equal to the key. Note : If i and j are the values returned by rank(key, a) and count(key, a) respectively, then a[i..i+j-1 ] are the values in the array that are equal to key .</p>
+</blockquote>
+
+<p>Again, code and result:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdRandom</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">edu.princeton.cs.algs4.StdOut</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CountByBinarySearch</span>
+<span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">rank</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span> <span class="n">lo</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+
+		<span class="k">while</span> <span class="o">(</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="o">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">])</span>
+				<span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">&gt;</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">])</span>
+				<span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="k">else</span>
+				<span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">count</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span> <span class="n">mid</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">((</span><span class="n">mid</span> <span class="o">=</span> <span class="n">rank</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">a</span><span class="o">))</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span>
+		<span class="o">{</span>
+			<span class="n">counter</span><span class="o">++;</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">mid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="o">{</span>
+				<span class="kt">int</span><span class="o">[]</span> <span class="n">low</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">mid</span><span class="o">];</span>
+				<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">low</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+					<span class="n">low</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+				<span class="kt">int</span><span class="o">[]</span> <span class="n">high</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+				<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+					<span class="n">high</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+				<span class="n">count</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">low</span><span class="o">);</span>
+				<span class="n">count</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+			<span class="o">}</span>
+			<span class="k">else</span>
+			<span class="o">{</span>
+				<span class="kt">int</span><span class="o">[]</span> <span class="n">high</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+				<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+					<span class="n">high</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">mid</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+				<span class="n">count</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="n">counter</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">30</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">Max</span> <span class="o">=</span> <span class="mi">20</span><span class="o">;</span>
+
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">len</span><span class="o">];</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+			<span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">StdRandom</span><span class="o">.</span><span class="na">uniform</span><span class="o">(</span><span class="n">Max</span><span class="o">);</span>
+
+		<span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">"The sorted array is: "</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="o">{</span>
+			<span class="n">StdOut</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"%02d "</span><span class="o">,</span> <span class="n">test</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+		<span class="o">}</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+		<span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"There is "</span> <span class="o">+</span> <span class="n">count</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">test</span><span class="o">)</span> <span class="o">+</span> <span class="s">" number 10 in the array"</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ java CountByBinarySearch
+The sorted array is: 00 00 00 02 03 04 04 04 06 06 07 08 09 10 10 10 10 12 14 14 14 15 15 16 16 16 17 18 19 19
+There is 4 number 10 in the array
+</code></pre></div></div>
+
+<h3 id="1131-random-connections">1.1.31 Random connections.</h3>
+<blockquote>
+  <p>Write a program that takes as command-line arguments an integer N and a double value p (between 0 and 1), plots N equally spaced dots of size .05 on the circumference of a circle, and then, with probability p for each pair of points, draws a gray line connecting them.</p>
+</blockquote>
+
+<p>This a picture of <code class="highlighter-rouge">N = 20</code> and <code class="highlighter-rouge">p = 0.2</code></p>
+
+<p><img src="/assets/images/RandomLining.jpg" alt="" /></p>
+
+
+    </main>
+  </body>
+</html>

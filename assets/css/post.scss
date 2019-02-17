@@ -1,0 +1,83 @@
+---
+---
+@import 'color';
+
+.subject {
+  .title {
+    text-align: left;
+  }
+  .tags {
+    font-size: 0.8rem;
+    margin: 0;
+    p {
+      margin: 2px;
+    }
+    .classes::before {
+      color: $highlight-color;
+      content: "📌";
+      padding-right: 0.5rem;
+    }
+    .keywords::before {
+      color: $dark-blue;
+      content: "📝";
+      padding-right: 0.5rem;
+    }
+  }
+}
+
+p {
+  text-align: justify;
+}
+
+blockquote {
+  margin-left: 0;
+  border-left: 5px solid $dark-blue;
+  padding-left: 1.5rem;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+pre {
+  box-sizing: border-box;
+  padding: 1rem;
+  width: calc(90vw - 300px);
+  margin: 0 auto;
+  background-color: $code-base-color;
+  overflow-x: auto;
+  max-width: 100%;
+  code {
+    border-radius: 0;
+    padding: 0;
+  }
+  @media (max-width: 600px) {
+    & {
+      width: 100%;
+    }
+  }
+}
+
+code {
+  background-color: $code-base-color;
+  border-radius: 5px;
+  padding: 0 0.5rem;
+}
+
+img {
+  max-width: 100%;
+  object-fit: fill;
+}
+
+a {
+  text-decoration: none;
+  color: $dark-green;
+  transition: color 300ms ease-out;
+  &[href^="http"]::after {
+    content: "⤴️";
+  }
+  &:visited {
+    color: $highlight-color;
+  }
+  &:hover {
+    color: $dark-blue;
+  }
+}

@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<header class="subject">
+  <div class="title">
+    <h2>{{ page.subject }}</h2>
+    <p>{{ page.date | date_to_string }}</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      {% for class in page.classes %}
+      <span>{{ class }}</span>
+      {% endfor %}
+    </p>
+    <p class="keywords">
+      {% for keyword in page.keywords %}
+      <span>{{ keyword }}</span>
+      {% endfor %}
+    </p>
+  </div>
+</header>
+<hr>
+{{ content }}
