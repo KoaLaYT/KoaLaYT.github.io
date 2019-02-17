@@ -51,6 +51,14 @@
             content: "📝";
             padding-right: 0.5rem;
           }
+          .classes, .keywords {
+            span:not(:first-of-type) {
+              &::before {
+                content: "/";
+                padding: 0 0.5rem;
+              }
+            }
+          }
         }
       }
     }

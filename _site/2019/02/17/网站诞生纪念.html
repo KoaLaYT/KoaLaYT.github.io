@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>网站诞生纪念</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>个人主页诞生纪念</h2>
+    <p>17 Feb 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>html</span>
+      
+      <span>css</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>memento</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>花了整整一个周末的时间把我的个人主页搭建完啦，当然功能还是比较简陋的，几乎只有<code class="highlighter-rouge">HTML</code>和<code class="highlighter-rouge">CSS</code>，主页的功能以后可以再慢慢增加，重要的是从今天起可以将前端学习的心得和做的一些练习都收集起来，方便自己日后浏览，也可以与别人交流。</p>
+
+<p>网站搭建用的是<code class="highlighter-rouge">jekyll</code>，这也是<code class="highlighter-rouge">github</code>推荐的方法。它的整个原理还是比较简单的，它通过<code class="highlighter-rouge">Liquid</code>语法，把你的<code class="highlighter-rouge">markdown</code>文件填充到<code class="highlighter-rouge">html</code>模板中预设的位置，这样可以在写博客的时候专注于文字本身，无需再考虑网页的结构布局。而如果以后有需要增加新功能或者改变网页样式，那么只需要修改对应的<code class="highlighter-rouge">css</code>和<code class="highlighter-rouge">html</code>文件，就可以将所有的网页都一并更新了。</p>
+
+<p>把<code class="highlighter-rouge">jekyll</code>官网上的<a href="https://jekyllrb.com/docs/step-by-step/01-setup/">教学</a>看一遍，就能差不多弄明白了。在社区里已经有许多别人做好的模板，不过既然我是在学习前端，我还是选择从头开始，自己搭建。下面就总结下其中遇到的一些问题吧。</p>
+<ul>
+  <li>页面的布局、颜色是最让我纠结的点，看了很多网上的模板，最后还是决定做个简洁点的。这样配色方便，更重要的是<code class="highlighter-rouge">responsive design</code>不会太复杂。</li>
+  <li>链接文件时的路径问题。一开始做完后发现图片不显示，发现是链接路径设置错了。现在明白<code class="highlighter-rouge">jekyll</code>是把<code class="highlighter-rouge">:root/</code>文件夹下的<code class="highlighter-rouge">assets</code>整个复制到<code class="highlighter-rouge">_site/</code>下，因此在设置路经时需要以该位置作为参考点来写，当然最好的就是都写绝对路径，每个要链接的<code class="highlighter-rouge">fonts</code>、图片都从<code class="highlighter-rouge">/assets</code>起始。<code class="highlighter-rouge">.scss</code>文件是从<code class="highlighter-rouge">_sass</code>中来链接的，因此要特别注意<code class="highlighter-rouge">@import</code>的文件要放对位置。</li>
+  <li>手机端的尺寸显示问题。尽管在<code class="highlighter-rouge">CSS</code>中设置了相应的<code class="highlighter-rouge">@media</code>条件，但是并没有起作用，网页只是被缩小了。网上查阅了之后，加入了<code class="highlighter-rouge">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>这一条，就解决问题了。在<a href="https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag">MDN</a>上有一篇文章解释了原因：手机端的浏览器会有一个<code class="highlighter-rouge">virtual viewport</code>，一般都会比实际屏幕尺寸大，因此当不加这一标签时，网页会按照这一虚拟尺寸绘制，再缩小到屏幕尺寸，因此尽管我按照手机尺寸设置了相应的<code class="highlighter-rouge">@media</code>条件，但实际上根本没有触发。加上上面这一标签后，浏览器会按照手机屏幕的尺寸来绘制网页，<code class="highlighter-rouge">@media</code>条件也就能被触发啦。不过这其中还有一个问题，就是手机分辨率非常高，如果按物理尺寸绘制，网页会小的根本看不清，因此这里面又有一个<strong>CSS pixel</strong>的概念，根据<a href="https://juiceboxinteractive.com/blog/a-pixel-is-not-a-pixel-designing-for-a-new-generation-of-mobile-devices/">这篇文章</a>的介绍: hardware pixel和software pixel（即CSS pixel）的比例关系由设备制造商定义，比如苹果的retina显示是1 CSS pixel = 4 hardware pixel（长宽各2个像素点）。但是一个CSS pixel的尺寸在不同分辨率的设备上基本是保持一样大小的，这对我们开发人员来讲是一件好事，不用去考虑物理与软件之间的比例转换关系了。</li>
+</ul>
+
+<p>关于本网站的建设，现在能想到的就是将主页的图片改成<code class="highlighter-rouge">SVG</code>，并加入一点动画。接下来的时间我还是专注复习<code class="highlighter-rouge">CSS</code>和<code class="highlighter-rouge">JS</code>，将一些一知半解的概念厘清，放到博客上来，同时使用<code class="highlighter-rouge">Webpack</code>完成更多的小练习（以<a href="https://learn.freecodecamp.org/">freeCodeCamp</a>上的项目为主）。</p>
+
+<p>最后立个<span style="color:red">🚩</span>，目标在一个月后开始<code class="highlighter-rouge">react</code>的学习。</p>
+
+
+    </main>
+  </body>
+</html>
