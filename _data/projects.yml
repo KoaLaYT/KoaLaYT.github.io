@@ -1,0 +1,50 @@
+
+# define property relations between projects.yml to projects.html
+# name ==> <h2>, the title of this project
+# category ==> outer folder name [for link]
+# link ==> inner folder name [for link]
+# description ==> <p>, a simple description of this project
+# image ==> <img>, the cover of this project
+
+### projects of webpage ###
+- name: conquer
+  category: responsive-webpage
+  link: conquer
+  description: <p>Mimic from the <a href="https://www.free-css.com/free-css-templates">free CSS template</a> by using pure HTML5 and CSS3</p>
+  image: conquer.png
+- name: renda
+  category: responsive-webpage
+  link: renda
+  description: <p>Mimic from the <a href="https://www.free-css.com/free-css-templates">free CSS template</a> by using pure HTML5, CSS3 and vanilla JS</p>
+  image: renda.png
+- name: a product landing page
+  category: responsive-webpage
+  link: a-product-landing-page
+  description: <p>a simple <a href="https://learn.freecodecamp.org/">freeCodeCamp</a> project</p>
+  image: product-landing-page.png
+- name: a survey form
+  category: responsive-webpage
+  link: a-survey-form
+  description: <p>a simple <a href="https://learn.freecodecamp.org/">freeCodeCamp</a> project</p>
+  image: survey-form.png
+- name: a technical documentation page
+  category: responsive-webpage
+  link: a-technical-documentation-page
+  description: <p>a simple <a href="https://learn.freecodecamp.org/">freeCodeCamp</a> project</p>
+  image: technical-documentation.png
+- name: a tribute page
+  category: responsive-webpage
+  link: a-tribute-page
+  description: <p>a simple <a href="https://learn.freecodecamp.org/">freeCodeCamp</a> project</p>
+  image: tribute-page.png
+### projects of javascript ###
+- name: 2048
+  category: javascript-demo
+  link: 2048
+  description: <p>a 2048 game with some basic animation by using <code>canvas</code> and <code>requestAnimationFrame</code></p>
+  image: 2048.png
+- name: minesweeping
+  category: javascript-demo
+  link: Minesweeping
+  description: <p>mimic from the classic game of windows, which using <code>div</code> to represent each block</p>
+  image: minesweeping.png

@@ -1,0 +1,89 @@
+---
+---
+@import 'color';
+
+.title {
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+section {
+  width: calc(95vw - 300px);
+  margin: 1rem auto;
+  .flex-container {
+    padding: 1rem;
+    display: flex;
+    flex-flow: row nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    .card {
+      border: 2px solid $base-color;
+      flex: 0 1 auto;
+      margin-right: 1rem;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      transition: transform 300ms ease-out,
+                  box-shadow 300ms ease-out;
+      > a {
+        display: block;
+        img {
+          height: 250px;
+        }
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+      }
+      p {
+        margin: 1rem;
+        text-align: center;
+        code {
+          padding: 0 0.5rem;
+          border-radius: 5px;
+          background-color: $code-base-color;
+        }
+        a {
+          text-decoration: none;
+          color: $dark-green;
+          transition: color 300ms ease-out;
+          &[href^="http"]::after {
+            content: "⤴️";
+          }
+          &:visited {
+            color: $highlight-color;
+          }
+          &:hover {
+            color: $dark-blue;
+          }
+        }
+      }
+      /* animation */
+      &:hover {
+        transform: translateY(-1rem);
+        box-shadow: 3px 5px 2px 2px silver;
+      }
+    }
+  }
+  > h2 {
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    border-left: 5px solid $dark-blue;
+  }
+}
+
+@media (max-width: 600px) {
+  section {
+    width: 100%;
+    .flex-container{
+      .card {
+        > a {
+          img {
+            height: 150px;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}

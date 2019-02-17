@@ -1,32 +1,15 @@
-/* define theme color */
-$base-color: #d5ebdc;
-$highlight-color: #FF1654;
-$font-color: #0e1316;
-$header-color: black;
-$code-base-color: #F3FFBD;
-$dark-blue: #247BA0;
-$dark-green: #70C1B3;
-
-html {
-  font-size: 18px;
-  font-family: Arial, Helvetica, "Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei", sans-serif;
-  color: $font-color;
-  h1, h2, h3, h4, h5, h6, strong {
-    color: $header-color;
-  }
-}
-
 body {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 300px 1fr;
 }
 
 .header, .main {
+  box-sizing: border-box;
   padding: 1rem;
 }
 
 .header {
-  box-sizing: border-box;
   background-color: $base-color;
   position: fixed;
   width: 300px;
@@ -35,6 +18,7 @@ body {
 }
 
 .main {
+  width: 100%;
   grid-column: 2 / 3;
 }
 
@@ -60,6 +44,58 @@ body {
   }
 }
 
+.nav {
+  margin-top: 1.5rem;
+  ul {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+      width: 100px;
+      position: relative;
+      text-align: center;
+      margin: 1rem 0;
+      a {
+        padding: 0.5rem 1rem;
+        display: inline-block;
+        text-decoration: none;
+        color: $font-color;
+        transition: color 300ms ease-out;
+        &.current {
+          color: $highlight-color;
+        }
+      }
+      /* add hover animation for the links */
+      &::before, &::after {
+        content: "";
+        width: 100%;
+        height: 5px;
+        display: block;
+        background-color: $dark-blue;
+        transition: transform 300ms ease-out;
+      }
+      &::before {
+        transform: translateY(-10px) scaleY(0);
+
+      }
+      &::after {
+        transform: translateY(10px) scaleY(0);
+      }
+      &:hover::before, &:hover::after {
+        transform: translateY(0) scaleY(1);
+      }
+      &:hover {
+        a {
+          color: $dark-blue;
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 600px) {
   body {
     display: flex;
@@ -73,5 +109,9 @@ body {
   .profile {
     flex-flow: row wrap;
     justify-content: space-between;
+  }
+  .nav ul {
+    flex-flow: row wrap;
+    justify-content: space-around;
   }
 }

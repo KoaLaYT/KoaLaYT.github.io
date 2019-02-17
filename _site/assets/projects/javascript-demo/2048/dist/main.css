@@ -1,0 +1,16 @@
+body {
+  max-width: 80%;
+  min-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  margin: 0 auto 1rem;
+}
+
+canvas {
+  margin: 0 auto;
+  border: 1px solid black;
+  border-radius: 10px;
+}

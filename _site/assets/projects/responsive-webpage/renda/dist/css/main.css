@@ -1,0 +1,531 @@
+html {
+  font: 14px 'Raleway', sans-serif;
+}
+
+body {
+  margin: 0 auto;
+}
+
+/* layout for navigation
+=========================*/
+nav {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgb(50,50,50);
+  z-index: 10;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav > div {
+  max-width: 1140px;
+  margin: 1rem auto;
+}
+
+/* layout for expand navigation */
+.expand {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-content: center;
+  padding: 0 2rem;
+}
+
+.expand > ul {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.icons > li {
+  margin-left: 1rem;
+}
+
+.menu > li > a {
+  color: white;
+  text-decoration: none;
+  line-height: 29px;
+  padding: 18px 1rem;
+}
+
+.this {
+  background: black;
+}
+
+@media (max-width: 1200px) {
+  nav > div {
+    max-width: 940px;
+  }
+}
+
+@media (max-width: 1000px) {
+  nav > div {
+    max-width: 750px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    width: 40px;
+    height: 27px;
+    margin: 1rem 1rem 1rem auto;
+    border: 1px solid gray;
+    border-radius: 4px;
+    background: repeating-linear-gradient(white 0%, white 15%, rgb(50,50,50) 15%, rgb(50,50,50) 40%) center / 20px 15px no-repeat;
+  }
+
+  .expand, .expand > ul {
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+  }
+
+  .expand {
+    position: absolute;
+    background: rgb(50,50,50);
+    transform-origin: top center;
+    transform: scale(1, 0);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+    border-top: 1px solid rgb(40,40,40);
+  }
+
+  .expand.close {
+    transform: scale(1, 1);
+    transition: transform 200ms ease-in-out 50ms;
+  }
+
+  .expand > .menu a {
+    padding: 0;
+  }
+
+  .expand > ul {
+    margin: 0.5rem 0;
+  }
+
+  .expand > .icons > li, .expand > .menu > li {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .expand > .menu > li:first-child {
+    background: black;
+  }
+
+  .hamburger:hover {
+    background-color: rgba(230,230,230,0.2);
+  }
+}
+
+/* layout for header
+====================*/
+header h1 {
+  padding: 1rem;
+  margin: 0;
+}
+
+header h1 img {
+  display: block;
+  margin: 10rem auto 3rem;
+  max-width: 100%;
+}
+
+header section {
+  width: 1140px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+header section figure {
+  width: 100%;
+  margin: 0 auto;
+  transition: left 800ms ease-in-out 50ms;
+}
+
+.leftPic, .rightPic {
+  position: absolute;
+  top: 0;
+}
+
+.midPic {
+  position: relative;
+}
+
+header section figure img {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+header section figure figcaption {
+  position: absolute;
+  background: rgba(50,50,50,0.5);
+  bottom: 20px;
+  left: 10px;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+header section div {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 1px solid black;
+}
+
+.arrowLeft {
+  left: 10px;
+  top: calc(50% - 25px);
+  background: url(../images/arrow-left.png) center no-repeat rgba(240,240,240,0.5);
+}
+
+.arrowRight {
+  right: 10px;
+  top: calc(50% - 25px);
+  background: url(../images/arrow-right.png) center no-repeat rgba(240,240,240,0.5);
+}
+
+.leftPic {
+  left: -1140px;
+}
+
+.midPic {
+  left: 0px;
+}
+
+.rightPic {
+  left: 1140px;
+}
+
+@media (max-width: 1200px) {
+  header section {
+    width: 940px;
+  }
+}
+
+@media (max-width: 1000px) {
+  header section {
+    width: 750px;
+  }
+}
+
+@media (max-width: 768px) {
+  header section {
+    width: auto;
+    margin: 0 1rem;
+  }
+}
+
+/* main content layout
+======================*/
+main {
+  margin: 5rem auto;
+  width: 1140px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+main article {
+  flex: 4 1 200px;
+  margin-right: 5rem;
+}
+
+main article > section {
+  margin-bottom: 5rem;
+  border-bottom: 1px solid silver;
+}
+
+main article > section:last-of-type {
+  border-bottom: none;
+}
+
+main aside {
+  flex: 1 1 200px;
+}
+
+main img {
+  width: 100%;
+}
+
+main aside .socials img {
+  width: 25px;
+}
+
+main article header {
+  text-align: center;
+  margin: 2rem auto;
+}
+
+main article h2 {
+  font-size: 2.5rem;
+  margin: 2rem auto;
+}
+
+main article h2 a {
+  text-decoration: none;
+  color: black;
+}
+
+main article h2 a:hover {
+  color: gray;
+}
+
+main article header p {
+  color: gray;
+  font-family: serif;
+  font-style: italic;
+}
+
+main article header p a {
+  text-decoration: none;
+  color: gray;
+}
+
+main article header p a:hover {
+  color: orange;
+}
+
+main article header p span {
+  padding-right: 1rem;
+}
+
+main article header p span:nth-of-type(2) {
+  padding-left: 2rem;
+  background: url(../images/icon-clock.jpg) left 0.8rem center / 0.8rem 0.8rem no-repeat;
+}
+
+main article header p span:nth-of-type(3) {
+  padding-left: 2rem;
+  background: url(../images/icon-cloud.png) left 0.8rem center / 0.8rem 0.8rem no-repeat;
+}
+
+main article section > p {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+main article section > div {
+  margin: 4rem auto;
+  border: 1px solid silver;
+  border-radius: 100px;
+  background-color: rgb(240,240,240);
+  padding: 0.8rem 1.6rem;
+  max-width: 180px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: background-color 200ms ease-in 50ms,
+              color 200ms ease-in 50ms;
+}
+
+main article section > div:hover {
+  background-color: orange;
+  color: white;
+}
+
+main aside > section {
+  margin-bottom: 3rem;
+}
+
+main aside section h2 {
+  background-color: black;
+  color: white;
+  text-align: center;
+  margin: 0 auto 2rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+.author, .designer {
+  text-align: center;
+}
+
+.author {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.designer {
+  color: gray;
+  font-size: 1rem;
+}
+
+.about-me {
+  text-align: justify;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.feature section::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.feature section:not(:last-of-type) {
+  border-bottom: 1px solid silver;
+}
+
+.feature section:not(:first-of-type) {
+  margin-top: 2rem;
+}
+
+.feature img {
+  float: left;
+  width: 90px;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+
+.feature > section:last-of-type > img {
+  margin-bottom: 0;
+}
+
+.feature h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature h3:hover {
+  color: gray;
+}
+
+.feature p {
+  color: silver;
+  font-style: italic;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.feature p span a {
+  text-decoration: none;
+  color: silver;
+}
+
+.feature p span:nth-of-type(1) {
+  padding-left: 1.2rem;
+  background: url(../images/icon-clock.jpg) left center / 0.8rem 0.8rem no-repeat;
+}
+
+.feature p span:nth-of-type(2) {
+  padding-left: 2.2rem;
+  background: url(../images/icon-cloud.png) left 1rem center / 0.8rem 0.8rem no-repeat;
+}
+
+.socials ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+.socials ul li {
+  margin-right: 2rem;
+}
+
+.socials ul li:last-of-type {
+  margin-right: 0;
+}
+
+.cate ul li {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.cate ul li a {
+  text-decoration: none;
+  color: gray;
+}
+
+.cate ul li a:hover {
+  color: orange;
+}
+
+@media (max-width: 1200px) {
+  main {
+    width: 940px;
+  }
+}
+
+@media (max-width: 1000px) {
+  main {
+    width: 750px;
+    flex-flow: column;
+  }
+
+  main article, main aside {
+    flex: 1 1 auto;
+  }
+
+  main article {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    margin: 5rem 1rem;
+    width: auto;
+  }
+}
+
+/* footer styling
+=================*/
+footer {
+  border-top: 1px solid silver;
+  width: 100vw;
+}
+
+footer ul {
+  list-style-type: none;
+  margin: 5rem 0 2rem;
+  padding: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+footer ul li {
+  border-radius: 100%;
+  background-color: rgb(100,100,100);
+  margin-right: 1rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+footer img {
+  display: block;
+}
+
+footer ul li:last-of-type {
+  margin-right: 0;
+}
+
+footer p {
+  letter-spacing: 1px;
+  text-align: center;
+  color: silver;
+}
+
+footer a {
+  text-decoration: none;
+  color: silver;
+}
+
+footer a:hover {
+  color: orange;
+}

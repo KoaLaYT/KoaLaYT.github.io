@@ -1,0 +1,43 @@
+body {
+  margin: 0 1rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+.profile , .data {
+  width: 80%;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.profile > label, .data > label {
+  align-self: center;
+}
+
+#start {
+  height: 50px;
+}
+
+input[type="number"] {
+  width: 3rem;
+}
+
+.battlefield {
+  margin-top: 1rem;
+  display: grid;
+  grid-auto-rows: 20px;
+  justify-content: flex-start;
+}
+
+.battlefield div {
+  line-height: 20px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #81D1F9;
+  border: 2px outset #81D1F9;
+  box-shadow: inset 0.5px 0.5px 1px white;
+}
