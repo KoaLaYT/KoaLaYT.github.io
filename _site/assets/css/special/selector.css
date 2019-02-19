@@ -1,0 +1,1 @@
+.demo{border:3px dotted #247BA0;border-radius:5px;padding:0 1rem;width:calc(90vw - 300px);margin:0 auto;box-sizing:border-box}@media (max-width: 600px){.demo{width:100%}}#focus-demo form:focus-within{background-color:gray}#target-demo p:target::before{content:"➡️";padding-right:1rem}#selection-demo p::selection{background-color:red;color:green}

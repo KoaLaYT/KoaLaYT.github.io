@@ -38,6 +38,11 @@ main {
   line-height: 1.5;
 }
 
+h3 {
+  border-left: 3px solid $dark-blue;
+  padding-left: 1rem;
+}
+
 p {
   text-align: justify;
 }
@@ -56,12 +61,13 @@ pre {
   padding: 1rem;
   width: calc(90vw - 300px);
   margin: 0 auto;
-  background-color: $code-base-color;
+  background-color: $pre-base-color;
   overflow-x: auto;
   max-width: 100%;
   code {
     border-radius: 0;
     padding: 0;
+    background-color: inherit;
   }
   @media (max-width: 600px) {
     & {

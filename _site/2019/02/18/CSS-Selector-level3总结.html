@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>Css Selector Level3总结</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    
+      <link rel="stylesheet" href="/assets/css/special/selector.css">
+    
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>CSS selector level 3 小结</h2>
+    <p>18 Feb 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>css</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>review</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>当前CSS选择器的标准是Level 3，其中定义的所有选择器可见<a href="https://drafts.csswg.org/selectors-3/#combinators">W3C</a>，在MDN中更是有一份包含了Level 4的<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference">详细清单</a>。为了以后参考方便，我先简单概述下<code class="highlighter-rouge">CSS</code>的<code class="highlighter-rouge">Cascade</code>和<code class="highlighter-rouge">Inheritance</code>原理，再说明选择器优先级的计算方法，一些常见的选择器及其用例总结在最后。</p>
+
+<h3 id="为什么要有cascade和inheritance">为什么要有<code class="highlighter-rouge">Cascade</code>和<code class="highlighter-rouge">Inheritance</code></h3>
+
+<p>一张网页中对一个元素样式的定义不仅来源于开发人员提供的<code class="highlighter-rouge">.css</code>文件中，还有别的来源，其所有可能的拉来源包括：</p>
+<ul>
+  <li>user agent / 浏览器</li>
+  <li>user / 用户</li>
+  <li>author / 开发人员</li>
+  <li>animation / 动画效果创建的虚拟规则</li>
+  <li>transition / 过渡效果创建的虚拟规则</li>
+</ul>
+
+<p>因此同一个元素的某一属性可能被重复定义过，这时候就需要一个规则解决这些冲突，即<code class="highlighter-rouge">cascade</code>。同样的，一张样式表里不可能对所有元素的所有属性都有定义，当一个属性缺少定义时，需要一个规则来决定它的值，即<code class="highlighter-rouge">inheritance</code>。</p>
+
+<h3 id="cascade规则概述"><code class="highlighter-rouge">cascade</code>规则概述</h3>
+<p>首先根据样式来源，并且结合<code class="highlighter-rouge">!important</code>，按如下顺序决定优先级（越在后面优先级越高）</p>
+<ol>
+  <li>Normal user agent declarations</li>
+  <li>Normal user declarations</li>
+  <li>Normal author declarations</li>
+  <li>Animation declarations</li>
+  <li>Important author declarations</li>
+  <li>Important user declarations</li>
+  <li>Important user agent declarations</li>
+  <li>Transition declarations</li>
+</ol>
+
+<p>这里面有两个问题要澄清下：</p>
+<ul>
+  <li>根据规范，<code class="highlighter-rouge">!important</code>可以覆盖<code class="highlighter-rouge">animation</code>，但是在Chrome上有<a href="https://bugs.chromium.org/p/chromium/issues/detail?id=223450">bug</a>，不能实现这一规则，而现在似乎只有Firefox是符合规范的。</li>
+  <li>MDN上<code class="highlighter-rouge">transition</code>的优先级是最低的，根据我简单的测试，它的优先级至少是比<code class="highlighter-rouge">animation</code>低的，因此浏览器此处的行为也与规范有所差异。</li>
+</ul>
+
+<p>之后根据来源按优先级分类完成后，同处一个来源的规则有冲突，则按如下方法计算选择器的优先级：</p>
+<ul>
+  <li>计算ID选择器个数 = a</li>
+  <li>计算类选择器、属性选择器和伪类的个数 = b</li>
+  <li>计算元素名选择器，伪元素的个数 = c</li>
+</ul>
+
+<p>其比较方法是优先比较a的个数，越多优先级越高，a相同时比较b，最后是c。</p>
+
+<p>注意：</p>
+<ol>
+  <li><code class="highlighter-rouge">*</code>，四个结合器以及<code class="highlighter-rouge">:not()</code>是忽略的</li>
+  <li><code class="highlighter-rouge">inline style</code>所属Author Origin，并且它的优先级高于一切选择器</li>
+  <li>优先级不是10进制的，10个c不等于1个b。可以说它是无限进制的，1个b比任何个数的c都要大</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 几个例子 优先级表示为(a, b, c) */
+*                         (0, 0, 0)
+li                        (0, 0, 1)
+ul ol + li                (0, 0, 3)
+h1 + [rel=up]             (0, 1, 1)  
+#s12:not(foo)             (1, 0, 1)
+</code></pre></div></div>
+
+<p>最后，如果选择器优先级也相等，那么后定义的规则覆盖前面定义的规则。</p>
+
+<h3 id="inheritance规则概述"><code class="highlighter-rouge">inheritance</code>规则概述</h3>
+
+<p>继承规则比较简单，当一个元素的某一属性未被直接定义时，首先继承其父元素的值，如果无法继承，则使用初始值（initial value）</p>
+
+<h3 id="level-3选择器小结">Level 3选择器小结</h3>
+
+<h4 id="选择器组--groups-of-selectors">选择器组 / Groups of selectors</h4>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">h1</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">h2</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">h3</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="c">/* 完全等价于 */</span>
+<span class="nt">h1</span><span class="o">,</span> <span class="nt">h2</span><span class="o">,</span> <span class="nt">h3</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c">/* 但是如果一组选择器中有一个是非法的，那么整个组的规则都会被弃用 */</span>
+<span class="nt">h1</span><span class="o">,</span> <span class="nt">h2</span><span class="o">.</span><span class="nc">.foo</span><span class="o">,</span> <span class="nt">h3</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="no">red</span> <span class="c">/* h1, h3也会失效 */</span>
+<span class="p">}</span>
+
+<span class="nt">h1</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">h2</span><span class="o">.</span><span class="nc">.foo</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span> <span class="c">/* 不合法，仅此条不生效 */</span>
+<span class="nt">h3</span> <span class="p">{</span> <span class="nl">color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+<h4 id="简单选择器--simple-selectors">简单选择器 / Simple selectors</h4>
+<p>有关<code class="highlighter-rouge">@namespace</code>的部分应该与<code class="highlighter-rouge">HTML5</code>的关系不大，因此这部分略去了。</p>
+
+<p>根据W3C标准的分类，简单选择器包括</p>
+<ul>
+  <li>Type selector： <code class="highlighter-rouge">elementname</code></li>
+  <li>Universal selector: <code class="highlighter-rouge">*</code></li>
+  <li>Attribute selector: <code class="highlighter-rouge">[attribute=value]</code></li>
+  <li>Class selector: <code class="highlighter-rouge">.classname</code></li>
+  <li>ID selector: <code class="highlighter-rouge">#idname</code></li>
+  <li>Pseudo-classes: <code class="highlighter-rouge">:pseudoclass</code></li>
+</ul>
+
+<p>首先展开Attribute Selector：</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span><span class="nt">attr</span><span class="o">]</span>        <span class="c">/* 带有attr属性 */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="o">=</span><span class="nt">val</span><span class="o">]</span>    <span class="c">/* 属性值恰好为val */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="o">~=</span><span class="nt">val</span><span class="o">]</span>   <span class="c">/* 属性值以空格分割， 其中一个指恰好为val， 如果val中含有空格或本身为空格， 将会实效 */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="o">|=</span><span class="nt">val</span><span class="o">]</span>   <span class="c">/* 属性值为val 或 val- */</span>
+
+<span class="c">/* 下面三个和字符串匹配有关 */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="o">^=</span><span class="nt">val</span><span class="o">]</span>   <span class="c">/* 以val开头 */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="err">$</span><span class="o">=</span><span class="nt">val</span><span class="o">]</span>   <span class="c">/* 以val结尾 */</span>
+<span class="o">[</span><span class="nt">attr</span><span class="o">*=</span><span class="nt">val</span><span class="o">]</span>   <span class="c">/* 含有val */</span>
+</code></pre></div></div>
+<p>在Selector Level 4中新增了两个语法，即可以在之前六种（第一种除外）用法的最后加入<code class="highlighter-rouge">s</code>或<code class="highlighter-rouge">i</code>标签，分别代表<code class="highlighter-rouge">case-sensitive</code>和<code class="highlighter-rouge">case-insensitive</code>。（他们本身是<code class="highlighter-rouge">case-insensitive</code>的，即大小写都可以）</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">a</span><span class="o">[</span><span class="nt">href</span><span class="o">*=</span><span class="s1">"insensitive"</span> <span class="nt">i</span><span class="o">]</span>    <span class="c">/* 大小写无关 */</span>
+<span class="nt">a</span><span class="o">[</span><span class="nt">href</span><span class="o">*=</span><span class="s1">"SensiTiVe"</span> <span class="nt">s</span><span class="o">]</span>      <span class="c">/* 大小写相关，根据MDN，这条规则还在实验中 */</span>
+</code></pre></div></div>
+<p>然后是Pseudo-classes：</p>
+
+<ul>
+  <li>常常与<code class="highlighter-rouge">&lt;a&gt;</code>相关的四个伪类</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* 推荐按照以下顺序来为链接自定义样式 */</span>
+<span class="nd">:link</span>
+<span class="nd">:visited</span>
+<span class="nd">:hover</span>
+<span class="nd">:active</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">:focus</code>和<code class="highlighter-rouge">:focus-within</code>(level 4)</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 如果一个元素自己或者任一后代处于`:focus`，那么`:focus-within`就会选中它。 */
+
+&lt;!-- html --&gt;
+&lt;form&gt;
+  &lt;p&gt;
+    &lt;label&gt;name: &lt;/label&gt;
+    &lt;input&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;age: &lt;/label&gt;
+    &lt;input&gt;
+  &lt;/p&gt;
+&lt;/form&gt;
+
+&lt;!-- css --&gt;
+form:focus-within {
+  background-color: gray;
+}
+</code></pre></div></div>
+<section id="focus-demo" class="demo">
+  <form>
+    <p>
+      <label>name: </label>
+      <input />
+    </p>
+    <p>
+      <label>age: </label>
+      <input />
+    </p>
+  </form>
+</section>
+
+<ul>
+  <li><code class="highlighter-rouge">:target</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- html --&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="#para1"&gt;select para1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#para2"&gt;select para2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p id="para1"&gt;demo para1&lt;/p&gt;
+&lt;p id="para2"&gt;demo para2&lt;/p&gt;
+
+&lt;!-- css --&gt;
+p:target::before {
+  content:"➡️";
+  padding-right: 1rem;
+}
+</code></pre></div></div>
+<section id="target-demo" class="demo">
+  <ul>
+    <li><a href="#para1">select para1</a></li>
+    <li><a href="#para2">select para2</a></li>
+  </ul>
+  <p id="para1">demo para1</p>
+  <p id="para2">demo para2</p>
+</section>
+
+<ul>
+  <li><code class="highlighter-rouge">:lang()</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>下面这个例子中，用[lang|="fr"]只能选中body，而用:lang(fr)则能选中body和p
+
+&lt;!-- html --&gt;
+&lt;body lang="fr"&gt;
+  &lt;p&gt;Je suis francais&lt;/p&gt;
+&lt;/body&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>和<code class="highlighter-rouge">&lt;form&gt;</code>状态相关</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* level 3定义的 */
+:disabled
+:enabled
+:checked
+
+/* 而在level 4中定义了更多，这里也就根据MDN上的内容罗列几个常用的 */
+:in-range
+:out-of-range
+
+:invalid
+:valid
+
+:default
+:required
+:optional
+
+:read-only
+:read-write
+</code></pre></div></div>
+
+<ul>
+  <li>和文本结构相关的伪类</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 在CSS里都代表<span class="nt">&lt;html&gt;</span> */
+:root
+:scope    /* level 4 */
+
+/* 与shadow DOM相关，定义在Scoping Module Level 1中 */
+:host
+:host()
+
+/* 类似与nth-child(an+b)的一组伪类
+ * b代表从子元素中的第b个开始计数，a代表迭代的步长, n从0开始+1
+ * a的正负代表迭代选择的方向，正朝结尾，负朝开始 */
+:nth-child()
+:nth-last-child() /* 从结尾处开始计数 */
+:nth-of-type()
+:nth-last-of-type()
+:first-child()
+:last-child()
+:first-of-type()
+:last-of-type()
+:only-child()
+:only-type()
+:empty()
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">:not()</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* :not()不能嵌套:not()，只能包含简单选择器，即这一节的所有选择器 */
+</code></pre></div></div>
+
+<h4 id="伪元素--pseudo-elements">伪元素 / Pseudo-elements</h4>
+<p>根据Level 3，伪元素包括<code class="highlighter-rouge">::after</code>, <code class="highlighter-rouge">::before</code>, <code class="highlighter-rouge">::first-letter</code>, <code class="highlighter-rouge">::first-line</code></p>
+
+<p>而在Level 4中，有用的有<code class="highlighter-rouge">::selection</code>, <code class="highlighter-rouge">::slotted()</code>(与shadow DOM相关)。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* 鼠标选中的内容即为::selection */
+
+&lt;!-- html --&gt;
+&lt;p&gt;This text has special styles when you highlight it.&lt;/p&gt;
+
+&lt;!-- css --&gt;
+p::selection {
+  background-color: red;
+  color: green;
+}
+</code></pre></div></div>
+
+<section id="selection-demo" class="demo">
+  <p>This text has special styles when you highlight it.</p>
+</section>
+
+<h4 id="结合器--combinators">结合器 / Combinators</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A B       /* 所有A的后代B */
+A &gt; B     /* 所有的子元素B */
+A + B     /* 与A有同一父元素的下一个相邻元素B */
+A ~ B     /* 与A有同一父元素的所有后继元素B */
+</code></pre></div></div>
+
+
+    </main>
+  </body>
+</html>

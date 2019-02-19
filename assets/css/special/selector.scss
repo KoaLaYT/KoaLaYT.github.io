@@ -1,0 +1,24 @@
+---
+---
+@import 'color';
+@import 'demo';
+
+#focus-demo {
+  form:focus-within {
+    background-color: gray;
+  }
+}
+
+#target-demo {
+  p:target::before {
+    content:"➡️";
+    padding-right: 1rem;
+  }
+}
+
+#selection-demo {
+  p::selection {
+    background-color: red;
+    color: green;
+  }
+}

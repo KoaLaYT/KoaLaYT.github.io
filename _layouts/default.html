@@ -7,6 +7,9 @@
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link rel="stylesheet" href="/assets/css/{{ page.style }}">
+    {% if page.specialStyle %}
+      <link rel="stylesheet" href="/assets/css/special/{{ page.specialStyle }}">
+    {% endif %}
   </head>
   <body>
     <header class="header">
