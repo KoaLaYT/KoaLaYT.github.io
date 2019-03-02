@@ -22,7 +22,8 @@
       content: "📝";
       padding-right: 0.5rem;
     }
-    .classes, .keywords {
+    .classes,
+    .keywords {
       span:not(:first-of-type) {
         &::before {
           content: "/";

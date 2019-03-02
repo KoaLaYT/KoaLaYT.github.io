@@ -7,6 +7,11 @@
 # image ==> <img>, the cover of this project
 
 ### projects of webpage ###
+- name: mimic medium
+  category: responsive-webpage
+  link: mimic-medium
+  description: <p>Mimic the famous <a href="https://medium.com/">Medium</a> website, by using vanilla JS, Sass and webpack</p>
+  image: medium.png
 - name: conquer
   category: responsive-webpage
   link: conquer
