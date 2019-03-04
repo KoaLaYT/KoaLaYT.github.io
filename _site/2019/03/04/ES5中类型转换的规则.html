@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>Es5中类型转换的规则</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>ES5中类型转换的规则</h2>
+    <p>04 Mar 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>javascript</span>
+      
+      <span>ES5</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>review</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>本文根据Speaking Javascript一书中的内容，简单总结下ES5中各种类型转换的规则。</p>
+
+<p><br /></p>
+
+<p>首先简单介绍下涉及类型转换的一些操作运算：</p>
+
+<h3 id="toprimitivevalue-preferredtype"><code class="highlighter-rouge">ToPrimitive(value, preferredType)</code></h3>
+<p>这个算法是ES标准中内置的函数，用于将一个值转换为primitive值，在ES5中包括<code class="highlighter-rouge">boolean</code>, <code class="highlighter-rouge">number</code>, <code class="highlighter-rouge">string</code>, <code class="highlighter-rouge">null</code>和<code class="highlighter-rouge">undefined</code>。它的规则如下：</p>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">preferredType = number</code></p>
+
+    <ol>
+      <li>如果value已经是primitive，直接返回</li>
+      <li>否则，value是一个<code class="highlighter-rouge">object</code>。先调用<code class="highlighter-rouge">value.valueOf()</code>，如果结果是primitive，返回</li>
+      <li>否则，调用<code class="highlighter-rouge">value.toString()</code>，如果结果是primitive，返回</li>
+      <li>否则，抛出一个<code class="highlighter-rouge">TypeError</code>的异常</li>
+    </ol>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">preferredType = string</code></p>
+
+    <p>将第2、第3步对换即可。</p>
+  </li>
+</ul>
+
+<p><code class="highlighter-rouge">valueOf()</code>的预设实现是<code class="highlighter-rouge">return this;</code></p>
+
+<p><code class="highlighter-rouge">toString()</code>的预设实现是返回类型信息。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">empty</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">empty</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">()</span> <span class="o">===</span> <span class="nx">empty</span><span class="p">;</span>    <span class="c1">// true</span>
+<span class="nx">empty</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>             <span class="c1">// "[object Object]"</span>
+</code></pre></div></div>
+
+<h3 id="strict-equality的规则">Strict Equality的规则</h3>
+<ul>
+  <li>对于不同类型的变量，永远不相等</li>
+  <li>对于同类型的变量，有以下关系：
+    <ol>
+      <li><code class="highlighter-rouge">undefined === undefined</code></li>
+      <li><code class="highlighter-rouge">null === null</code></li>
+      <li>两个number值：
+<code class="highlighter-rouge">x === x</code>
+<code class="highlighter-rouge">+0 === -0</code>
+<code class="highlighter-rouge">NaN !== NaN</code></li>
+      <li>两个object只有当它们同时指向一个object时才相等</li>
+      <li>其余情况均不相等</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="lenient-equality的规则">Lenient Equality的规则</h3>
+<ul>
+  <li>对于同类型的变量，规则同strict equality</li>
+  <li>对于不同类型的变量，有以下规则：
+    <ol>
+      <li><code class="highlighter-rouge">undefined == null</code></li>
+      <li>string和number：将string转换为number，然后对两者运用strict equality的规则</li>
+      <li>boolean和非boolean：将boolean转换为number，然后继续运用lenient equality的规则</li>
+      <li>object和string或number：对object调用<code class="highlighter-rouge">ToPrimitive()</code>，然后继续运用lenient equality的规则</li>
+      <li>以上都不成立时，返回false</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="comparison的规则">Comparison的规则</h3>
+<ol>
+  <li>保证两边的值都是primitive，对object调用<code class="highlighter-rouge">ToPrimitive()</code></li>
+  <li>两个string按照字母顺序比较大小</li>
+  <li>其他情况下将两边转换为number，再比较大小</li>
+</ol>
+
+<h3 id="plus运算符的规则">Plus运算符的规则</h3>
+<ol>
+  <li>保证两边的值都是primitive，对object调用<code class="highlighter-rouge">ToPrimitive()</code></li>
+  <li>如果任何一边是string，则将两者都转换为string，返回两者的拼接值</li>
+  <li>其他情况下将两边转换为number，返回相加值</li>
+</ol>
+
+<p><br /></p>
+
+<p>下面根据不同的类型，总结它们的转换规则：</p>
+<h3 id="boolean"><code class="highlighter-rouge">Boolean</code></h3>
+
+<p>所有的falsy值包括：</p>
+<ul>
+  <li><code class="highlighter-rouge">undefined</code>, <code class="highlighter-rouge">null</code></li>
+  <li><code class="highlighter-rouge">+0</code>, <code class="highlighter-rouge">-0</code>, <code class="highlighter-rouge">NaN</code></li>
+  <li><code class="highlighter-rouge">false</code></li>
+  <li><code class="highlighter-rouge">""</code></li>
+</ul>
+
+<p>也即除了上述值外，其余的值均会被转换为<code class="highlighter-rouge">true</code></p>
+
+<p>将一个值转换为<code class="highlighter-rouge">boolean</code>有三种方式：</p>
+<ul>
+  <li><code class="highlighter-rouge">Boolean(value)</code></li>
+  <li><code class="highlighter-rouge">value ? true : false</code></li>
+  <li><code class="highlighter-rouge">!!value</code></li>
+</ul>
+
+<h3 id="number"><code class="highlighter-rouge">Number</code></h3>
+
+<p>不同类型转换为number的规则如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. undefined      --&gt; NaN
+2. null           --&gt; 0
+3. boolean:
+      true        --&gt; 1
+      false       --&gt; 0
+4. number         --&gt; as input
+5. string         --&gt; 去除头尾的空白字符，如有非法字符，则为NaN，空字符串转换为0
+6. object         --&gt; 调用ToPrimitive(value, number)
+</code></pre></div></div>
+<p>将一个值转换为<code class="highlighter-rouge">number</code>有两种方式：</p>
+<ul>
+  <li><code class="highlighter-rouge">Number(value)</code></li>
+  <li><code class="highlighter-rouge">+value</code></li>
+</ul>
+
+<h3 id="string"><code class="highlighter-rouge">String</code></h3>
+
+<p>不同类型转换为string的规则如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. undefined        --&gt; "undefined"
+2. null             --&gt; "null"
+3. boolean
+      true          --&gt; "true"
+      false         --&gt; "false"
+4. number           --&gt; 相应的数字字符串
+5. string           --&gt; string
+6. object           --&gt; 调用ToPrimitive(value, string)
+</code></pre></div></div>
+<p>将一个值转换为<code class="highlighter-rouge">string</code>有三种方式：</p>
+<ul>
+  <li><code class="highlighter-rouge">String(value)</code></li>
+  <li><code class="highlighter-rouge">"" + value</code></li>
+  <li><code class="highlighter-rouge">value.toString()</code></li>
+</ul>
+
+<p><br /></p>
+
+<p>可以看到，类型转换的规则还是比较复杂的，一不注意就会犯错，这也是为什么很多人推荐使用<code class="highlighter-rouge">===</code>的原因。最后，附上一张关于<code class="highlighter-rouge">==</code>的<a href="https://dorey.github.io/JavaScript-Equality-Table/">表格</a></p>
+
+
+    </main>
+  </body>
+</html>
