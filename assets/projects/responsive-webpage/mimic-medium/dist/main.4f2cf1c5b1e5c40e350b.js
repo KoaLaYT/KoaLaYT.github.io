@@ -7,6 +7,13 @@
 
 /***/ }),
 
+/***/ "/OMX":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/94a5cdaf9d9263f59ce8e0591625a58d.png";
+
+/***/ }),
+
 /***/ "1s3J":
 /***/ (function(module, exports) {
 
@@ -274,12 +281,12 @@
         let infiniteInfo = articleList.getBoundingClientRect();
 
         if (infiniteInfo.top < 0) {
-          let transformY = -infiniteInfo.top + window.innerHeight - asideInfo.height;
+          let transformY = -infiniteInfo.top + window.innerHeight - (asideInfo.bottom - asideInfo.top);
           transformY = Math.max(0, transformY);
           aside.style.transform = `translateY(${transformY}px)`;
         }
 
-        let lastScrollY = window.scrollY;
+        let lastScrollY = window.pageYOffset;
 
 
         // add aside-list scroll sticky effect
@@ -310,16 +317,16 @@
         aside,
         articleList,
         lastScrollY) {
-        let direction = window.scrollY - lastScrollY > 0 ? "down" : "up";
-
+        let direction = window.pageYOffset - lastScrollY > 0 ? "down" : "up";
+        
         if (direction == "down" && aside.getBoundingClientRect().bottom - window.innerHeight <= 0) {
           let lastTransform = Number(aside.style.transform.slice(11, -3)) || 0;
-          aside.style.transform = `translateY(${lastTransform + window.scrollY - lastScrollY}px)`;
+          aside.style.transform = `translateY(${lastTransform + window.pageYOffset - lastScrollY}px)`;
         } else if (direction == "up" && aside.getBoundingClientRect().top >= 0) {
           let newPos = Math.min(articleList.getBoundingClientRect().top - 32, 0);
           aside.style.transform = `translateY(${-newPos}px)`;
         }
-        return window.scrollY;
+        return window.pageYOffset;
       }
     }
   });
@@ -351,6 +358,13 @@
 
 /***/ }),
 
+/***/ "2F2u":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/64c25333d5e7d1358a7b6bfd2ef8c132.png";
+
+/***/ }),
+
 /***/ "2gco":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -358,14 +372,30 @@ var map = {
 	"./avatar.svg": "ogUF",
 	"./envelope.svg": "7btg",
 	"./featured-collection.png": "b7gm",
+	"./featured-collection0.png": "2F2u",
+	"./featured-collection1.png": "ZtqH",
+	"./featured-collection2.png": "Rsqs",
 	"./featured-cover-middle.png": "GLNj",
-	"./featured-cover-small.png": "p7qD",
-	"./featured-cover.png": "e1BP",
+	"./featured-cover-middle0.png": "nFs1",
+	"./featured-cover-middle1.png": "IfBt",
+	"./featured-cover-middle2.png": "zfgG",
+	"./featured-cover-middle3.png": "iX+N",
+	"./featured-cover-middle4.png": "/OMX",
+	"./featured-cover-middle5.png": "wrwy",
+	"./featured-cover-middle6.png": "MW//",
+	"./featured-cover-middle7.png": "LSHT",
+	"./featured-cover0.png": "HFNR",
+	"./featured-cover1.png": "4XbQ",
+	"./featured-cover2.png": "Vyqo",
 	"./magnifying-glass.svg": "Xrfg",
 	"./medium-large.png": "B10F",
 	"./medium-small.svg": "hHDd",
 	"./new-from-network.png": "bpyY",
 	"./profile.png": "r1sf",
+	"./profile0.png": "zoaq",
+	"./profile1.png": "3eP+",
+	"./profile2.png": "FRvb",
+	"./profile3.png": "hI5F",
 	"./reading-list.png": "7mMz"
 };
 
@@ -391,6 +421,20 @@ webpackContext.id = "2gco";
 
 /***/ }),
 
+/***/ "3eP+":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/8c8e9abe4b714f15788be235895718d9.png";
+
+/***/ }),
+
+/***/ "4XbQ":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/04825276ea42be96549cd4843ee36d41.png";
+
+/***/ }),
+
 /***/ "7btg":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -412,6 +456,13 @@ module.exports = __webpack_require__.p + "images/2e57f51d7cb324677cf8cfc724f61c2
 
 /***/ }),
 
+/***/ "FRvb":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/740469d84fd8b7ad29b5516414412f5b.png";
+
+/***/ }),
+
 /***/ "GLNj":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -419,10 +470,59 @@ module.exports = __webpack_require__.p + "images/5c424bc3494cff33813eca2695c365b
 
 /***/ }),
 
+/***/ "HFNR":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/f2787ce97346f5f08ca9128af8ef4d66.png";
+
+/***/ }),
+
+/***/ "IfBt":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/b5f8ddf7dfb1b335c17de009ebe55c24.png";
+
+/***/ }),
+
+/***/ "LSHT":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/b6e3b52625a6ec57d48775af8e7b3501.png";
+
+/***/ }),
+
+/***/ "MW//":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/59e9e2af078b820b326673584f0b0f64.png";
+
+/***/ }),
+
+/***/ "Rsqs":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/2f088cd2874284bf45d7cd32fa4a41ab.png";
+
+/***/ }),
+
+/***/ "Vyqo":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/2d6a5d563331748971281f7f2a2bb926.png";
+
+/***/ }),
+
 /***/ "Xrfg":
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "images/2e5a42b67203585d06c669540238ed4d.svg";
+
+/***/ }),
+
+/***/ "ZtqH":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/6df5e60222855fef61beb2d86179b942.png";
 
 /***/ }),
 
@@ -440,13 +540,6 @@ module.exports = __webpack_require__.p + "images/572f82b0a87f283af7fc471375db984
 
 /***/ }),
 
-/***/ "e1BP":
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "images/5ddbb4998ba354be4358546ea4ed6cb6.png";
-
-/***/ }),
-
 /***/ "hHDd":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -454,17 +547,31 @@ module.exports = __webpack_require__.p + "images/28f2c2485119be240dd2343bbde3764
 
 /***/ }),
 
+/***/ "hI5F":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/ad607e9b184a910a153a09ea23afef7f.png";
+
+/***/ }),
+
+/***/ "iX+N":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/bd436c6ba5a1cedcdc9ff485db29c9bc.png";
+
+/***/ }),
+
+/***/ "nFs1":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/45a369e4f2c05be1af93d1bd42919bbc.png";
+
+/***/ }),
+
 /***/ "ogUF":
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "images/625b6e018904b734004cd2e5187f2a41.svg";
-
-/***/ }),
-
-/***/ "p7qD":
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "images/4bce9413eac6d479535334473fc38f3e.png";
 
 /***/ }),
 
@@ -509,31 +616,37 @@ window.addEventListener("optimizedResize", chooseSiteIcon);
 // load featured content images
 document.querySelectorAll(".featured-article__cover > img").forEach(img => {
   let classLists = img.parentElement.parentElement.classList;
-  if (classLists.contains("most-featured") ||
-      classLists.contains("second-featured")) {
-    img.src = images["./featured-cover.png"];
-  } else {
-    img.src = images["./featured-cover-middle.png"];
+  if (classLists.contains("most-featured")) {
+    let dice = Math.floor(Math.random() * 3);
+    img.src = images[`./featured-cover${dice}.png`];
+  } else if (classLists.contains("second-featured")) {
+    let dice = Math.floor(Math.random() * 3);
+    img.src = images[`./featured-cover${dice}.png`];
+  }
+  else {
+    let dice = Math.floor(Math.random() * 8);
+    img.src = images[`./featured-cover-middle${dice}.png`];
   }
 });
 
 
 // load infinite article images
 document.querySelectorAll(".infinite-article__cover > img").forEach(img => {
-  img.src = images["./featured-cover-middle.png"];
+  let dice = Math.floor(Math.random() * 8);
+  img.src = images[`./featured-cover-middle${dice}.png`];
 });
 
 
 // load featured collection images
-document.querySelectorAll(".collection__cover").forEach(img => {
-  img.src = images["./featured-collection.png"];
+document.querySelectorAll(".collection__cover").forEach((img, index) => {
+  img.src = images[`./featured-collection${index}.png`];
 });
 
 // load aside images
 document.querySelector(".news-aside__header__cover").src = images["./new-from-network.png"];
 document.querySelector(".reading-list-aside__header__cover").src = images["./reading-list.png"];
-document.querySelectorAll(".news-aside__list__article__cover").forEach(img => {
-  img.src = images["./profile.png"];
+document.querySelectorAll(".news-aside__list__article__cover").forEach((img, index) => {
+  img.src = images[`./profile${index}.png`];
 });
 
 // load additional article
@@ -582,7 +695,8 @@ window.addEventListener("load", () => {
             </div>
             `;
             document.querySelectorAll(".infinite-article__cover > img").forEach(img => {
-              img.src = images["./featured-cover-middle.png"];
+              let dice = Math.floor(Math.random() * 8);
+              img.src = images[`./featured-cover-middle${dice}.png`];
             });
             articleList.appendChild(artElement);
           }
@@ -679,6 +793,27 @@ function importAll(r) { /* [1] */
   return outputs;
 }
 
+
+/***/ }),
+
+/***/ "wrwy":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/8a070f438a076f2abc85410feacc1d66.png";
+
+/***/ }),
+
+/***/ "zfgG":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/da42c8072997fd7a8ef1669c35ec50c7.png";
+
+/***/ }),
+
+/***/ "zoaq":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "images/49cf43da4609c4f8382c2cb58bc42f78.png";
 
 /***/ })
 
