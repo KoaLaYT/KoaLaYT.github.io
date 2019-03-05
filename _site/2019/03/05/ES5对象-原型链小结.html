@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>Es5对象、原型链小结</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>ES5对象、原型链小结</h2>
+    <p>05 Mar 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>javascript</span>
+      
+      <span>ES5</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>review</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>本文小结了下Speaking JavaScript一书第17章<a href="http://speakingjs.com/es5/ch17.html">Object and Inheritance</a>的内容，方便以后参考。关于对象的基本用法和语法就不写了，主要记录一些不常用，或者容易混淆的特性。</p>
+
+<h3 id="delete"><code class="highlighter-rouge">delete</code></h3>
+
+<p>只有在试图删除一个非继承且non-configurable的属性时才会返回<code class="highlighter-rouge">false</code>，其余情况下均返回<code class="highlighter-rouge">true</code>。即无法删除继承来的属性。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var obj = {};
+Object.defineProperty(obj, "canBeDeleted", {
+  value: 123,
+  configurable: true
+});
+Object.defineProperty(obj, "cannotBeDeleted", {
+  value: 456,
+  configurable: false
+});
+
+delete obj.canBeDeleted;          // true
+delete obj.cannotBeDeleted;       // false
+delete obj.notExist;              // true
+delete obj.toString;              // true, but the toString function will still be there
+</code></pre></div></div>
+
+<h3 id="this"><code class="highlighter-rouge">this</code></h3>
+
+<p>关于<code class="highlighter-rouge">this</code>的用法，<a href="https://github.com/getify/You-Dont-Know-JS">You don’t know JS</a>一书中有很好的<a href="https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch2.md">解释</a>。可分为以下四类：</p>
+<ul>
+  <li>default binding：这种方式在<code class="highlighter-rouge">strict mode</code>下会报错，因此基本可以忽略。</li>
+  <li>implicit binding：即常见的<code class="highlighter-rouge">a.foo()</code>的用法，但是在回调函数等用法中会丢失<code class="highlighter-rouge">this</code>的绑定。</li>
+  <li>explicit binding：即使用<code class="highlighter-rouge">Function.prototype.bind</code>, <code class="highlighter-rouge">Function.prototype.apply</code>或<code class="highlighter-rouge">Function.prototype.call</code>方法，显式地将<code class="highlighter-rouge">this</code>设置为某一对象。</li>
+  <li>new binding：使用<code class="highlighter-rouge">new Constructor()</code>的方式将<code class="highlighter-rouge">Constructor</code>中的<code class="highlighter-rouge">this</code>绑定为新创建的对象。</li>
+</ul>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">MDN</a>上有关于<code class="highlighter-rouge">Function.prototype.bind</code>的polyfill，我发现对于理解<code class="highlighter-rouge">bind</code>的原理很有帮助，也一并放到这里：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Does not work with `new funcA.bind(thisArg, args)`
+if (!Function.prototype.bind) (function(){
+  var ArrayPrototypeSlice = Array.prototype.slice;
+  Function.prototype.bind = function() {
+    var thatFunc = this, thatArg = arguments[0];
+    var args = ArrayPrototypeSlice.call(arguments, 1);
+    if (typeof thatFunc !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - ' +
+             'what is trying to be bound is not callable');
+    }
+    return function(){
+      args.push.apply(args, arguments);
+      return thatFunc.apply(thatArg, args);
+    };
+  };
+})();
+</code></pre></div></div>
+
+<p>此外，Speaking JavaScript本章中对<code class="highlighter-rouge">new</code>的解释也很有启发：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function newOperator(Constr, args) {
+  var thisValue = Object.create(Constr.prototype);
+  var result = Constr.apply(thisValue, args);
+  if (result &amp;&amp; typeof result == 'object') return result;
+  return thisValue;
+}
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">this</code>还有一个要注意的地方就是它的作用域只是当前函数，你不能用<code class="highlighter-rouge">this</code>去获取函数外的对象：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var obj = {
+    name: 'Jane',
+    friends: [ 'Tarzan', 'Cheeta' ],
+    loop: function () {
+        'use strict';
+        this.friends.forEach(
+            function (friend) {  
+                console.log(this.name+' knows '+friend);
+            }
+        );
+    }
+};
+
+obj.loop();         // TypeError: Cannot read property 'name' of undefined
+</code></pre></div></div>
+
+<p>本书提供了三种ES5下的解决方法：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 1. that = this
+loop: function() {
+  'use strict';
+  var that = this;
+  this.friends.forEach(
+    function(friend) {
+      console.log(that.name + ' knows ' + friend);
+    }
+  );
+}
+
+// 2. bind()
+loop: function() {
+  'use strict';
+  this.friend.forEach(
+    function(friend) {
+      console.log(this.name + ' knows ' + friend);
+    }.bind(this)
+  );
+}
+
+// 3. thisValue for `forEach()`
+loop: function() {
+  'use strict';
+  this.friend.forEach(
+    function(friend) {
+      console.log(this.name + ' knows ' + friend);
+    },
+    this
+  );
+}
+</code></pre></div></div>
+
+<h3 id="与prototype相关的内置函数">与<code class="highlighter-rouge">[[prototype]]</code>相关的内置函数</h3>
+<ul>
+  <li>定义属性或原型相关
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object.create(proto, propDescObj?);
+Object.defineProperty(obj, propKey, propDesc);
+Object.defineProperties(obj, propDescObj);
+</code></pre></div>    </div>
+  </li>
+  <li>获取属性或原型相关
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object.getPrototypeOf(obj);
+Object.prototype.isPrototypeOf(obj);
+Object.prototype.hasOwnProperty(propKey);
+propKey in obj;
+Object.getOwnPropertyNames(obj);
+Object.keys(obj);
+Object.getOwnPropertyDescriptor(obj, propKey);
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="遍历对象属性的几种方法">遍历对象属性的几种方法</h3>
+
+<ol>
+  <li><code class="highlighter-rouge">Object.getOwnPropertyNames()</code>：返回对象所有的自有属性</li>
+  <li><code class="highlighter-rouge">Object.keys()</code>：返回对象所有的可遍历的自有属性，即所有<code class="highlighter-rouge">enumerable: true</code>的属性</li>
+  <li><code class="highlighter-rouge">for (prop in obj)</code>：可以遍历对象自有以及继承来的所有可遍历属性</li>
+</ol>
+
+<p>如果想要遍历一个对象的所有属性，包括继承的，那么可以自己写一个函数，例如：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function getAllPropertyNames(obj) {
+  var result = [];
+  while (obj) {
+    result = result.concat(Object.getOwnPropertyNames(obj));
+    obj = Object.getPrototypeOf(obj);
+  }
+  return result;
+}
+</code></pre></div></div>
+
+<h3 id="property-attributes-and-property-descriptors">Property Attributes and Property Descriptors</h3>
+
+<p>这两个术语我不晓得中文该叫什么，只能用英文了。</p>
+
+<p>Property Attributes一共有6种，下面罗列了这6种并且标明了当通过Property Descriptors来设定它们的值时，它们的预设值：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. [[Value]]          --&gt;     undefined   
+2. [[Writable]]       --&gt;     false
+3. [[Get]]            --&gt;     undefined
+4. [[Set]]            --&gt;     undefined
+5. [[Enumerable]]     --&gt;     false
+6. [[Configurable]]   --&gt;     false
+</code></pre></div></div>
+
+<p>在使用Property Descriptors时要区分两种情况：</p>
+<ol>
+  <li>属性不存在，那么没有显式声明的值将设为预设值</li>
+  <li>属性存在，那么仅更新声明的值，其余值不变</li>
+</ol>
+
+<h3 id="使用defineproperty或defineproperties和的区别">使用<code class="highlighter-rouge">defineProperty()</code>或<code class="highlighter-rouge">defineProperties()</code>和<code class="highlighter-rouge">=</code>的区别</h3>
+
+<ul>
+  <li>使用<code class="highlighter-rouge">defineProperty()</code>或<code class="highlighter-rouge">defineProperties()</code>意味着创建或更新一个属性，此行为永远只和自有属性相关，无视原型链。</li>
+  <li>使用<code class="highlighter-rouge">=</code>赋值时，要经过以下四个步骤（以prop举例）：
+    <ol>
+      <li>当prop是一个<code class="highlighter-rouge">setter</code>时（无论自有或继承），调用这个<code class="highlighter-rouge">setter</code></li>
+      <li>否则，如果prop是read-only时（无论自有或继承），抛出异常（在strict mode下）</li>
+      <li>否则，如果prop是自有属性，并且可写，那么用新值更新它</li>
+      <li>否则，如果当前对象没有prop属性，或者继承的prop是可读写的，那么创建这个新属性</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="保护对象的三个层次">保护对象的三个层次</h3>
+<ol>
+  <li><code class="highlighter-rouge">Object.preventExtensions()</code>及其<code class="highlighter-rouge">Object.isExtensible()</code>：不能新增属性，但是可以删除属性</li>
+  <li><code class="highlighter-rouge">Object.seal()</code>及其<code class="highlighter-rouge">Object.isSealed()</code>：不能增加属性，同时所有的属性<code class="highlighter-rouge">configurable: false</code></li>
+  <li><code class="highlighter-rouge">Object.freeze()</code>及其<code class="highlighter-rouge">Object.isFrozen()</code>：seal的同时，所有属性<code class="highlighter-rouge">Writable: false</code></li>
+</ol>
+
+<h3 id="constructor属性"><code class="highlighter-rouge">constructor</code>属性</h3>
+<p>最佳实践：确保每个构造函数（也即使用<code class="highlighter-rouge">new</code>来创建新实例对象的函数）的以下等式成立<code class="highlighter-rouge">C.prototype.constructor === C</code></p>
+
+<h3 id="让数据私有化的三种方法">让数据私有化的三种方法</h3>
+<ul>
+  <li>私有变量包含在构造函数中（Crockford Privacy Pattern)</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function StringBuilder() {
+  var buffer = [];
+  this.add = function(str) {
+    buffer.push(str);
+  };
+  this.toString = function() {
+    return buffer.join("");
+  };
+}
+</code></pre></div></div>
+
+<ul>
+  <li>使用特殊符号标记私有变量</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function StringBuilder() {
+  this._buffer = [];
+}
+
+StringBuilder.prototype = {
+  constructor: StringBuilder,
+  add: function(str) {
+    this._buffer.push(str);
+  },
+  toString: function() {
+    return this._buffer.join("");
+  }
+};
+</code></pre></div></div>
+
+<ul>
+  <li>使用具体化(Reified)的属性定义私有变量</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var StringBuilder = function () {
+  var KEY_BUFFER = "_StringBuilder_buffer";
+
+  function StringBuilder() {
+    this[KEY_BUFFER] = [];
+  }
+
+  StringBuilder.prototype = {
+    constructor: StringBuilder,
+    add: function(str) {
+      this[KEY_BUFFER].push(str);
+    },
+    toString: function() {
+      return this[KEY_BUFFER].join("");
+    }
+  };
+
+  return StringBuilder;
+}();
+</code></pre></div></div>
+
+<h3 id="使用原型链实现类继承的方法">使用原型链实现类继承的方法</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function Sub(prop1, prop2, prop3, prop4) {
+  Super.call(this, prop1, prop2);
+  this.prop3 = prop3;
+  this.prop4 = prop4;
+}
+
+Sub.prototype = Object.create(Super.prototype);
+Sub.prototype.constructor = Sub;
+Sub.prototype.methodB = function(x, y) {
+  // make a super call
+  var superResult = Super.prototype.methodB.call(this, x, y);
+  ...
+};
+</code></pre></div></div>
+
+
+    </main>
+  </body>
+</html>
