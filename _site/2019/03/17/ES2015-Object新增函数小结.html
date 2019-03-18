@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>Es2015 object新增函数小结</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>ES2015 Object新增函数小结</h2>
+    <p>17 Mar 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>javascript</span>
+      
+      <span>ES2015</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>review</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>本文旨在梳理ES2015中新增的一些<code class="highlighter-rouge">Object</code>相关函数的特性及其用法，参考的是<a href="http://exploringjs.com/es6/ch_oop-besides-classes.html">Exploring ES6 第14章</a>、<a href="http://speakingjs.com/es5/ch17.html#property_attributes">Speaking JavaScript 相关章节</a>以及<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">MDN</a></p>
+
+<h3 id="objectassigntarget-source1-source2-"><code class="highlighter-rouge">Object.assign(target, source1, source2, ...)</code></h3>
+
+<p>该函数依次将<code class="highlighter-rouge">source</code>中的自有可遍历(<code class="highlighter-rouge">enumerable</code>)属性（同时包括<code class="highlighter-rouge">string</code>和<code class="highlighter-rouge">symbol</code>属性）写入<code class="highlighter-rouge">target</code>中，它写入的方式仅为<code class="highlighter-rouge">=</code>，如下面的polyfill所示(来源于<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign">MDN</a>，注意它不支持<code class="highlighter-rouge">symbol</code>（因为<code class="highlighter-rouge">for ... in</code>只遍历<code class="highlighter-rouge">string</code>属性）)：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (typeof Object.assign != 'function') {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, "assign", {
+    value: function assign(target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target == null) { // TypeError if undefined or null
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index &lt; arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource != null) { // Skip over if undefined or null
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true
+  });
+}
+</code></pre></div></div>
+
+<p>从中可以看出<code class="highlighter-rouge">Object.assign</code>不会正确设置<code class="highlighter-rouge">getter</code>和<code class="highlighter-rouge">setter</code>，要想正确设置，可以使用如下函数(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign">MDN</a>)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function completeAssign(target, ...sources) {
+  sources.forEach(source =&gt; {
+    let descriptors = Object.keys(source).reduce((descriptors, key) =&gt; {
+      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
+      return descriptors;
+    }, {});
+    // by default, Object.assign copies enumerable Symbols too
+    Object.getOwnPropertySymbols(source).forEach(sym =&gt; {
+      let descriptor = Object.getOwnPropertyDescriptor(source, sym);
+      if (descriptor.enumerable) {
+        descriptors[sym] = descriptor;
+      }
+    });
+    Object.defineProperties(target, descriptors);
+  });
+  return target;
+}
+</code></pre></div></div>
+
+<h3 id="objectisval1-val2"><code class="highlighter-rouge">Object.is(val1, val2)</code></h3>
+
+<p>这个函数比<code class="highlighter-rouge">===</code>更为准确：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object.is(NaN, NaN);          // true
+Object.is(+0, -0);            // false
+</code></pre></div></div>
+
+<h3 id="objectsetprototypeofobj-proto"><code class="highlighter-rouge">Object.setPrototypeOf(obj, proto)</code></h3>
+
+<p>这个函数可以用来设置原型链，但根据<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf">MDN</a>的警告，该函数会影响性能，仍然推荐使用<code class="highlighter-rouge">Object.create()</code>来设置原型链。</p>
+
+<h3 id="遍历对象属性的五种方法">遍历对象属性的五种方法</h3>
+
+<p>由于ES6引入了<code class="highlighter-rouge">Symbol</code>，因此在规范中将属性进一步分类为<code class="highlighter-rouge">String</code>和<code class="highlighter-rouge">Symbol</code>，由此增加了两种遍历属性的方法，结合原来的三种方法，现在共有五个相关函数可以获取对象的属性：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Object.keys(obj)</code>：获取对象自有的可遍历<code class="highlighter-rouge">String</code>属性</li>
+  <li><code class="highlighter-rouge">Object.getOwnPropertyNames(obj)</code>：获取对象自有的所有<code class="highlighter-rouge">String</code>属性</li>
+  <li><code class="highlighter-rouge">Object.getOwnPropertySymbols(obj)</code>：获取对象自有的所有<code class="highlighter-rouge">Symbol</code>属性</li>
+  <li><code class="highlighter-rouge">Reflect.ownKeys(obj)</code>：获取对象自有的所有属性</li>
+  <li><code class="highlighter-rouge">for (const prop in obj)</code>：将遍历对象自有以及继承的可遍历<code class="highlighter-rouge">String</code>属性</li>
+</ul>
+
+<h3 id="几个特殊的symbol">几个特殊的<code class="highlighter-rouge">Symbol</code></h3>
+
+<ul>
+  <li><code class="highlighter-rouge">Symbol.hasInstance</code></li>
+</ul>
+
+<p>和<code class="highlighter-rouge">instanceof</code>运算符相关，<code class="highlighter-rouge">x instanceof C</code>在ES6中有如下运算规则：</p>
+<ol>
+  <li>如果<code class="highlighter-rouge">C</code>不是一个对象，抛出<code class="highlighter-rouge">TypeError</code>的异常</li>
+  <li>调用<code class="highlighter-rouge">C[Symbol.hasInstance](x)</code>，将结果转化为<code class="highlighter-rouge">Boolean</code>后返回</li>
+  <li>如果上述属性不存在，就根据传统的算法返回结果</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const ReferenceType = {
+  [Symbol.hasInstance](value) {
+    return (value !== null &amp;&amp;
+             (typeof value === "object" || typeof value === "function"));
+  }
+};
+
+const obj1 = {};
+obj1 instanceof Object;               // true
+obj1 instanceof ReferenceType;        // true
+
+const obj2 = Object.create(null);
+obj2 instanceof Object;               // false
+obj2 instanceof ReferenceType;        // true
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Symbol.toPrimitive</code></li>
+</ul>
+
+<p>根据Speaking JavaScript中对类型转换规则的描述，我之前总结过一篇<a href="/2019/03/04/ES5中类型转换的规则.html">文章</a>。其中对<code class="highlighter-rouge">toPrimitive()</code>的规则其实并不很清晰，现在根据Exploring ES6中的描述，可以澄清之前的模糊：</p>
+
+<p><code class="highlighter-rouge">toPrimitive()</code>共有三种模式：</p>
+<ul>
+  <li><code class="highlighter-rouge">Number</code></li>
+  <li><code class="highlighter-rouge">String</code></li>
+  <li><code class="highlighter-rouge">Default</code></li>
+</ul>
+
+<p>而只有以下三种运算会使用<code class="highlighter-rouge">Default</code>模式：</p>
+<ul>
+  <li><code class="highlighter-rouge">==</code></li>
+  <li><code class="highlighter-rouge">+</code></li>
+  <li><code class="highlighter-rouge">new Date(value)</code></li>
+</ul>
+
+<p>而除<code class="highlighter-rouge">Date</code>将<code class="highlighter-rouge">Default</code>模式等同于<code class="highlighter-rouge">String</code>外，其余的对象均将<code class="highlighter-rouge">Default</code>模式等同于<code class="highlighter-rouge">Number</code></p>
+
+<p>结合以下例子可以更好地理解：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const obj = {
+    [Symbol.toPrimitive](hint) {
+        switch (hint) {
+            case 'number':
+                return 123;
+            case 'string':
+                return 'str';
+            case 'default':
+                return 'default';
+            default:
+                throw new Error();
+        }
+    }
+};
+console.log(2 * obj);             // 246
+console.log(3 + obj);             // '3default'
+console.log(obj == 'default');    // true
+console.log(String(obj));         // 'str'
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Symbol.toStringTag</code></li>
+</ul>
+
+<p>这个<code class="highlighter-rouge">Symbol</code>可以用来改写对象的<code class="highlighter-rouge">toString</code>标签：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>({[Symbol.toStringTag]: "Foo"}.toString())          // "[object Foo]"
+</code></pre></div></div>
+
+
+    </main>
+  </body>
+</html>
