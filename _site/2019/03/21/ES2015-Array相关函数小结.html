@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+    <title>Es2015 array相关函数小结</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    
+  </head>
+  <body>
+    <header class="header">
+      <div class="profile">
+  <img src="/assets/images/profile.png" alt="my profile image">
+  <div class="description">
+    <h2>KoaLaYT</h2>
+    <p>A web develop learner</p>
+  </div>
+</div>
+
+      <nav class="nav">
+  <ul>
+    
+    <li><a href="/" >Home</a></li>
+    
+    <li><a href="/blog.html" >Blog</a></li>
+    
+    <li><a href="/projects.html" >Projects</a></li>
+    
+  </ul>
+</nav>
+
+    </header>
+    <main class="main">
+      <header class="subject">
+  <div class="title">
+    <h2>ES2015 Array相关函数小结</h2>
+    <p>21 Mar 2019</p>
+  </div>
+
+  <div class="tags">
+    <p class="classes">
+      
+      <span>javascript</span>
+      
+      <span>ES2015</span>
+      
+    </p>
+    <p class="keywords">
+      
+      <span>review</span>
+      
+    </p>
+  </div>
+</header>
+<hr>
+<p>本文旨在梳理ES2015中包含的所有<code class="highlighter-rouge">Array</code>下的相关函数，希望能够熟悉这些函数的用法。主要参考的仍然是<a href="http://exploringjs.com/es6/ch_arrays.html">Exploring ES6 第18章</a>以及<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">MDN中的相关章节</a></p>
+
+<h3 id="array的静态方法"><code class="highlighter-rouge">Array</code>的静态方法</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.from()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.from(arrayLike, mapFn?, thisArg?)
+</code></pre></div></div>
+
+<p>它能将一些类数组的数据结构转换为数组，比如<code class="highlighter-rouge">String</code>，<code class="highlighter-rouge">Set</code>，<code class="highlighter-rouge">Map</code>，<code class="highlighter-rouge">arguments</code>以及DOM。<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from">MDN</a>上有一个满有趣的例子：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const range =
+  (start, stop, step) =&gt; Array.from(
+    {length: (stop - start) / step + 1},
+    (_, i) =&gt; start + step * i);
+
+// 注意到这个例子中length = 5.5，也能生成一个5元素的数组
+range(1, 10, 2);                  // [1, 3, 5, 7, 9]
+
+// 还能用来生成字母
+range('A'.charCodeAt(0), 'Z'.charCodeAt(0), 1).map(x =&gt; String.fromCharCode(x));
+// ["A", "B", "C", ... , "Z"];
+
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.isArray()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.isArray(value);
+</code></pre></div></div>
+
+<p>用来判断<code class="highlighter-rouge">value</code>是否为数组，它比<code class="highlighter-rouge">instanceof</code>更为准确，因为在不同的<code class="highlighter-rouge">iframe</code>之间也能正常工作。<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray">MDN</a>中提到了一个冷知识：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.isArray(Array.prototype);         // true
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.of()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.of(ele0, ele1, ... , eleN);
+</code></pre></div></div>
+
+<p>下面这个例子说明了它和构造函数<code class="highlighter-rouge">Array</code>的最重要的一个区别：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.of(3);      // [3]
+new Array(3);     // [ , , ,]
+</code></pre></div></div>
+
+<h3 id="array的原型链方法"><code class="highlighter-rouge">Array</code>的原型链方法</h3>
+
+<p>先总结一些不含<code class="highlighter-rouge">callback</code>的方法。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.pop()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.push()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.shift()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.unshift()</code></li>
+</ul>
+
+<p>这些方法类似于将<code class="highlighter-rouge">Array</code>看成一个双向栈。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.indexOf()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.lastIndexOf()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.indexOf(searchElement, fromIndex?);
+arr.lastIndexOf(searchElement, fromIndex?);
+</code></pre></div></div>
+
+<p>这两个函数只是搜索的方向不同，需要注意的是它们都是使用<code class="highlighter-rouge">===</code>来判断搜索目标存在与否，因此对于<code class="highlighter-rouge">NaN</code>，这两个函数都会返回<code class="highlighter-rouge">-1</code>。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NaN].indexOf(NaN);               // -1
+</code></pre></div></div>
+
+<p>此外，<code class="highlighter-rouge">fromIndex</code>可以是负值，此时会加上<code class="highlighter-rouge">length</code>，如果该值仍为负，则认为是<code class="highlighter-rouge">0</code>；如果<code class="highlighter-rouge">fromIndex</code>大于<code class="highlighter-rouge">length</code>，那么总会返回<code class="highlighter-rouge">-1</code>。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.includes()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.includes(valueToFind, fromIndex?);
+</code></pre></div></div>
+
+<p>和之前两个函数的区别是，它正确能分辨出<code class="highlighter-rouge">NaN</code>：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1, 2, NaN].includes(NaN);         // true
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.copyWithin()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.copyWithin(target, start?, end?);
+</code></pre></div></div>
+
+<p>要注意的是它的每一个参数都可以是负数，其规则和前面的一致。它将改变<code class="highlighter-rouge">arr</code>的值，同时也会返回这个修改后的数组：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let arr = [1, 2, 3];
+let arr1 = arr.copyWithin(0, 1);
+
+console.log(arr);                   // [2, 3, 3]
+console.log(arr1);                  // [2, 3, 3]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.concat()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let new_arr = old_arr.concat(val1, val2, val3);
+</code></pre></div></div>
+
+<p>它不会修改原数组，会返回一个新创建的数组。此外，对于数组中的对象，它只复制这个对象的<code class="highlighter-rouge">reference</code>。当然在ES2015里，可以用<code class="highlighter-rouge">...</code>来取代这一函数：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let obj = {
+    a: 1,
+    b: 2
+};
+
+let arr1 = [1, 2];
+let arr2 = [[3]];
+let arr3 = obj;
+
+let mergedArr1 = arr1.concat(arr2, arr3);
+let mergedArr2 = [...arr1, ...arr2, arr3];
+
+console.log(mergedArr1);                // [1, 2, [3], {a:1, b:2}]
+console.log(mergedArr2);                // [1, 2, [3], {a:1, b:2}]
+
+console.log(mergedArr1[3] === obj);     // true
+console.log(mergedArr2[3] === obj);     // true
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.join()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.join(separator?);
+</code></pre></div></div>
+
+<p>当参数省略时，默认使用<code class="highlighter-rouge">,</code>：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let a = ['Wind', 'Rain', 'Fire'];
+a.join();           // 'Wind,Rain,Fire'
+a.join(', ');       // 'Wind, Rain, Fire'
+a.join(' + ');      // 'Wind + Rain + Fire'
+a.join('');         // 'WindRainFire'
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.reverse()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.reverse();
+</code></pre></div></div>
+
+<p>要注意的是它会改变<code class="highlighter-rouge">arr</code>。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.slice()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.slice(begin?, end?);
+</code></pre></div></div>
+
+<p>要注意的是这个范围是左闭右开的，而且允许负数。它返回一个新数组，不改变原数组，因此意味着对<code class="highlighter-rouge">object</code>是复制其<code class="highlighter-rouge">reference</code>，对<code class="highlighter-rouge">primitive</code>是复制值。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.splice()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.splice(start, deleteCount?, item1, item2, ... , itemN);
+</code></pre></div></div>
+
+<p>要注意的是它的返回值，是一个被删除元素的数组，也即意味着原数组的内容被改变了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let myFish = ['angel', 'clown', 'drum', 'sturgeon'];
+let removed = myFish.splice(2, 1, 'trumpet');
+
+// myFish is ["angel", "clown", "trumpet", "sturgeon"]
+// removed is ["drum"]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.sort()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.sort(compareFunc?);
+</code></pre></div></div>
+
+<p>当没有提供<code class="highlighter-rouge">compareFunc</code>时，会将数组的元素转换为<code class="highlighter-rouge">string</code>，然后按UTF-16的code unit顺序进行排序。
+对<code class="highlighter-rouge">compareFunc(a, b)</code>返回值的要求和传统习惯是一致的，即小于0代表a小于b，大于0代表a大于b。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let numbers = [4, 2, 5, 1, 3];
+numbers.sort((a, b) =&gt; a - b);            // [1, 2, 3, 4, 5]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.fill()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.fill(value, start?, end?);
+</code></pre></div></div>
+
+<p>它的用法基本和其他函数一致，即<code class="highlighter-rouge">start</code>和<code class="highlighter-rouge">end</code>可为负数，左闭右开，省略时的默认值等等。要特别注意的是当<code class="highlighter-rouge">value</code>的类型为<code class="highlighter-rouge">object</code>时。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let arr = Array(3).fill({})         // [{}, {}, {}];
+arr[0].hi = "hi";                   // [{ hi: "hi" }, { hi: "hi" }, { hi: "hi" }]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.entries()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.keys()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.values()</code></li>
+</ul>
+
+<p>这几个方法都比较显而易见，就不详述了。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.toString()</code>
+这个方法将数组的元素用逗号分隔开，返回一个字符串。</li>
+</ul>
+
+<p>然后开始总结包含<code class="highlighter-rouge">callback</code>的高阶函数。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.every()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.some()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.every(callback, thisArg?);
+arr.some(callback, thisArg?);
+
+// callback(element, index?, array?)
+</code></pre></div></div>
+
+<p>这两个函数都返回<code class="highlighter-rouge">boolean</code>，其用法也是显而易见的。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[12, 5, 8].every(x =&gt; x &gt;= 10);         // false
+[12, 5, 8].some(x =&gt; x &gt;= 10);          // true
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.find()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.findIndex()</code></li>
+</ul>
+
+<p>语法同上。</p>
+
+<p><code class="highlighter-rouge">find</code>返回第一个符合条件的元素或者<code class="highlighter-rouge">undefined</code>；<code class="highlighter-rouge">findIndex</code>则返回这个元素的indice或者-1。所以和前面两个函数一样，<code class="highlighter-rouge">callback</code>是一个返回<code class="highlighter-rouge">boolean</code>的判断函数。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.forEach()</code></li>
+  <li><code class="highlighter-rouge">Array.prototype.map()</code></li>
+</ul>
+
+<p>语法同上。</p>
+
+<p>这两个函数的区别在于<code class="highlighter-rouge">map</code>会返回一个函数，而<code class="highlighter-rouge">forEach</code>不会，因此一般只用来产生副作用。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.filter()</code></li>
+</ul>
+
+<p>语法同上。</p>
+
+<p>同样通过一个返回<code class="highlighter-rouge">boolean</code>的<code class="highlighter-rouge">callback</code>来过滤不符合要求的元素，返回一个新的数组。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.reduce()</code></li>
+</ul>
+
+<p>语法如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr.reduce(callback, initialValue?);
+
+// callback(accumulator, currentValue, currentIndex?, array?)
+</code></pre></div></div>
+
+<p>这个函数的用法和上述的几个都不太一样，因此需要特别注意。</p>
+
+<p>当不提供<code class="highlighter-rouge">initialValue</code>时，会有<code class="highlighter-rouge">accumulator = arr[0]</code>且<code class="highlighter-rouge">currentIndex = 1</code>；而当提供该值时，<code class="highlighter-rouge">accumulator = initialValue</code>且<code class="highlighter-rouge">currentIndex = 0</code>。根据<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">MDN</a>的建议，总是提供这样一个<code class="highlighter-rouge">initialValue</code>会比较安全。</p>
+
+<p>通过一些例子可以较好地理解这个函数：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// flatten an array of arrays
+let flattened = [[0, 1], [2, 3], [4, 5]].reduce(
+  (acc, cur) =&gt; acc.concat(cur),
+  []
+  );            // [0, 1, 2, 3, 4, 5]
+
+// 这个例子说明了acc可以是一个对象
+let names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
+
+let countedNames = names.reduce((allNames, name) =&gt; {
+  if (name in allNames) {
+    allNames[name]++;
+  } else {
+    allNames[name] = 1;
+  }
+  return allNames;
+  }, {});       // {'Alice': 2, 'Bob': 1, 'Tiff': 1, 'Bruce': 1}
+</code></pre></div></div>
+
+<p>可以找到很多用<code class="highlighter-rouge">reduce</code>实现的一些巧妙算法，在MDN上就有很多例子。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Array.prototype.reduceRight()</code></li>
+</ul>
+
+<p>即从右至左完成<code class="highlighter-rouge">reduce</code>。</p>
+
+
+    </main>
+  </body>
+</html>
