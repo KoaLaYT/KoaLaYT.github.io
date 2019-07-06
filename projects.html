@@ -14,9 +14,10 @@ style: projects.css
       {% if proj.category == "responsive-webpage" %}
       <div class="card">
         <a href="/assets/projects/{{ proj.category }}/{{ proj.link }}/dist/index.html" target="_blank">
-          <img src="/assets/images/{{ proj.image }}" alt="The cover of {{ proj.name }}"></a>
-          <h2>{{ proj.name }}</h2>
-          {{ proj.description }}
+          <img src="/assets/images/{{ proj.image }}" alt="The cover of {{ proj.name }}">
+        </a>
+        <h2>{{ proj.name }}</h2>
+        {{ proj.description }}
       </div>
       {% endif %}
     {% endfor %}
@@ -29,9 +30,26 @@ style: projects.css
       {% if proj.category == "javascript-demo" %}
       <div class="card">
         <a href="/assets/projects/{{ proj.category }}/{{ proj.link }}/dist/index.html" target="_blank">
-          <img src="/assets/images/{{ proj.image }}" alt="The cover of {{ proj.name }}"></a>
-          <h2>{{ proj.name }}</h2>
-          {{ proj.description }}
+          <img src="/assets/images/{{ proj.image }}" alt="The cover of {{ proj.name }}">
+        </a>
+        <h2>{{ proj.name }}</h2>
+        {{ proj.description }}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+<section>
+  <h2>angular demo</h2>
+  <div class="flex-container">
+    {% for proj in site.data.projects %}
+      {% if proj.category == "angular-demo" %}
+      <div class="card">
+        <a href="{{ proj.link }}" target="_blank">
+          <img src="/assets/images/{{ proj.image }}" alt="The cover of {{ proj.name }}">
+        </a>
+        <h2>{{ proj.name }}</h2>
+        {{ proj.description }}
       </div>
       {% endif %}
     {% endfor %}

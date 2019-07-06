@@ -53,3 +53,9 @@
   link: Minesweeping
   description: <p>mimic from the classic game of windows, which using <code>div</code> to represent each block</p>
   image: minesweeping.png
+### projects of angular ###
+- name: a social media website for WOW
+  category: angular-demo
+  link: https://www.koalayt.space/beta/azeroth-social-media/
+  description: <p>a demo website written in angular and powered by express</p>
+  image: ASM.png
