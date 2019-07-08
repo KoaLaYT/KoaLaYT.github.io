@@ -1,1 +1,1 @@
-.main img{max-width:100%}
+.resume__block>h3{border-bottom:1px solid black}a{text-decoration:none;color:#70C1B3;transition:color 300ms ease-out}a[href^="http"]::after{content:"⤴️"}a:visited{color:#FF1654}a:hover{color:#247BA0}

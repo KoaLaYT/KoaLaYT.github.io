@@ -33,12 +33,88 @@
 
     </header>
     <main class="main">
-      <section class="introduce">
-  <p>欢迎来到我的主页</p>
-  <p>Welcome to my web page, feel free to explore!</p>
-</section>
-<section>
-  <img src="/assets/images/climbing-koalayt.jpg" alt="a climbing koala">
+      <section class="resume">
+  <h2>我的简历</h2>
+  <section class="resume__block">
+    <h3>专业技术</h3>
+    <ul>
+      <li>Web基础：
+          <ul>
+            <li>HTML：熟悉HTML5中各种语义化标签；了解常用的forms；对responsive images有一定的认识</li>
+            <li>CSS：了解CSS3的一些最新特性，包括selector，flex，grid等；知晓responsive design，progessive inhancement等理念；阅读过部分W3C规范</li>
+            <li>JavaScript：了解常见的JS概念，如closure，prototype chain，event loop等；了解三种异步方法，如promise，async/await，rxjs；了解部分Web API，如DOM，local storage，File，Fetch等</li>
+          </ul>
+      </li>
+      <li>
+        前端框架：angular，通读过官方文档，并制作了两个相关的demo
+      </li>
+      <li>
+        前端工具：webpack, scss, typescript
+      </li>
+      <li>
+        后端知识：使用过express及mongoose搭建后台API
+      </li>
+    </ul>
+  </section>
+  <section class="resume__block">
+    <h3>开源项目及作品</h3>
+    <article>
+      <h4>Excel对表小程序</h4>
+      <p>
+        在大众质保的工作中经常需要将多张excel表格的数据进行整合，找出新增的内容，修改过的内容或是删除的内容。之前使用excel vba来完成此项工作，但随着业务的增加，对表时间可长达4分钟。
+      </p>
+      <p>
+        在希望缩短对表时间的前提下，使用Angular7.0 + Electron，制作了一个桌面APP来完成此工作，将对表时间缩短至10秒以内。
+      </p>
+      <p>
+        具体实现：
+        <ol>
+          <li>Angular + Material UI制作界面，实现基本的form validator</li>
+          <li>Electron封装为桌面免安装版APP</li>
+          <li>使用一张网页渲染UI，另一张隐藏的网页执行具体的对表运算，通过ipcRenderer通信，以保证界面的流畅</li>
+        </ol>
+      </p>
+      <p>
+        <a href="https://github.com/KoaLaYT/bm-tool">源码</a>
+      </p>
+    </article>
+    <article>
+      <h4>WOW社交媒体demo</h4>
+      <p>
+        在完成前端各方面知识的学习后，希望制作一个较为复杂的demo来巩固前端知识与技能，于是选择制作一个类似微博的社交网站。
+      </p>
+      <p>
+        主要功能：
+        <ol>
+          <li>可以注册账号，发布图片、文字及视频</li>
+          <li>采用responsive design，适应手机、平台、桌面</li>
+          <li>通过intersection observer实现无限滚动，加载新的内容</li>
+        </ol>
+      </p>
+      <p>
+        具体实现：
+        <ol>
+          <li>使用Angular8.0作为前端框架，后台用Nginx + Express + MongoDB实现。</li>
+          <li>因为是练习，尽可能多的使用了Angular中的功能，如lazy loading，reactive forms，animation等，以熟悉官方文档中的各项API为主。</li>
+          <li>后端方面实现了基本的增插删改、账号密码验证等功能。</li>
+        </ol>
+      </p>
+      <p>
+        <a href="https://www.koalayt.space/beta/azeroth-social-media/">项目链接</a>
+      </p>
+      <p>
+        <a href="https://github.com/KoaLaYT/Azeroth-Social-Media">源码</a>
+      </p>
+    </article>
+    <article>
+      <h4>其他项目<a href="./projects.html">点我</a></h4>
+    </article>
+  </section>
+  <section class="resume__block contact">
+    <h3>联系方式</h3>
+    <p>邮箱： heyuntao615@163.com</p>
+    <p>手机： 158-2180-2143</p>
+  </section>
 </section>
 
     </main>

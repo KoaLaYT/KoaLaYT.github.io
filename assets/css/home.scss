@@ -1,7 +1,22 @@
 ---
 ---
-.main {
-  img {
-    max-width: 100%;
+@import 'color';
+
+.resume__block > h3 {
+  border-bottom: 1px solid black;
+}
+
+a {
+  text-decoration: none;
+  color: $dark-green;
+  transition: color 300ms ease-out;
+  &[href^="http"]::after {
+    content: "⤴️";
+  }
+  &:visited {
+    color: $highlight-color;
+  }
+  &:hover {
+    color: $dark-blue;
   }
 }
